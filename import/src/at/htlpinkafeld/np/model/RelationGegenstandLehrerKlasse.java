@@ -8,6 +8,8 @@ package at.htlpinkafeld.np.model;
 
 import java.util.*;
 
+import at.htlpinkafeld.np.util.*;
+
 /**
  * Die Klasse RelationGegenstandLehrerKlasse speichert 
  * eine Relation von je einem Gegenstand mit dem 
@@ -17,7 +19,7 @@ import java.util.*;
  *
  * @author Thomas Perl <thp@perli.net>
  */
-public class RelationGegenstandLehrerKlasse {
+public class RelationGegenstandLehrerKlasse implements SQLizable {
     private Gegenstand gegenstand;
     private Lehrer lehrer;
     private Klasse klasse;
@@ -175,6 +177,17 @@ public class RelationGegenstandLehrerKlasse {
         return klasse.getUid();
     }
     
+    /**
+     * Wandelt diese Relation in einen String um. Dieser String 
+     * ist einfach eine Umwandlung der Objekte (Gegenstand, Lehrer, 
+     * Klasse) in einen String, verknüpft mit "-".
+     *
+     * @return String im Format "(Gegenstand)-(Lehrer)-(Klasse)"
+     **/
+    public String toString() {
+        return "(" + gegenstand + ")-(" + lehrer + ")-(" + klasse + ")";
+    }
+    
     // Es folgen die Methoden, die automatisch erzeugt wurden (getter und setter)
 
     public Gegenstand getGegenstand() {
@@ -199,6 +212,33 @@ public class RelationGegenstandLehrerKlasse {
 
     public void setKlasse(Klasse klasse) {
         this.klasse = klasse;
+    }
+
+    /**
+     * Wandelt dieses Relationen-Objekt um in einen SQL 
+     * "INSERT INTO" - Befehl, mit dem diese Relation 
+     * in die Datenbank geschrieben werden kann.
+     *
+     * @return SQL "INSERT INTO" Befehl, mit dem dieses Objekt in die Datenbank geschrieben werden kann
+     **/
+    public String toSqlInsert() {
+        String table = DatabaseMetadata.T_GEGENSTAND_LEHRER_KLASSE;
+
+        int g_num = gegenstand.getUid();
+        int l_num = lehrer.getUid();
+        int k_num = klasse.getUid();
+        int dauer = 0;
+        
+        // Wenn der Gegenstand schriftlich ist, dauert es eine 3/4 Stunde mehr
+        if( gegenstand.isSchriftlich())
+            dauer += 45;
+        
+        // Wenn der Gegenstand mündlich ist, dauert es 1/4 Stunde mehr
+        if( gegenstand.isMuendlich())
+            dauer += 15;
+        
+        return "INSERT INTO " + table + " (Gegenstandsnummer, Lehrernummer, Klassennummer, Dauer) " +
+                    "VALUES (" + g_num + ", " + l_num + ", + " + k_num + ", " + dauer + ")";
     }
     
 }
