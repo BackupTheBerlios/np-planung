@@ -85,8 +85,6 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         Logger.progress( this, "Lese Lehrer und Gegenständen (+Relationen) aus " + filename);
         
         String [] line = null;
-        Vector store = null;
-        Vector olditem = null;
         
         while( (line = parser.getLine()) != null)
         {
@@ -319,25 +317,6 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
     }
     
     /**
-     * Liefert die Spaltenüberschriften der
-     * Gegenstandstabelle, um diese in einer
-     * JTable zu benutzen
-     *
-     * @return Vektor, der die Gegenstandsheader beinhaltet
-     */
-    public Vector getHeaders()
-    {
-        Vector headers = new Vector();
-        
-        headers.add( "UID");
-        headers.add( "Beschreibung");
-        headers.add( "Schriftlich");
-        headers.add( "Mündlich");
-        
-        return headers;
-    }
-
-    /**
      * Schreibt eine Logger-Warnung aus, die besagt, dass 
      * eine line (beim Einlesen) nicht berücksichtigt 
      * werden konnte und somit keine Daten angelegt wurden.
@@ -398,7 +377,25 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
             }
         }
         
-        Logger.progress( this, "Alle Gegenstände und Lehrer erfolgreich in die Datenbank geschrieben.");
+        Logger.progress( this, "Schreibe alle Gegenstand-Lehrer-Klasse Relationen in die Datenbank.");
+        
+        // G-L-K-Relationen-Tabelle leeren
+        db.emptyTable( DatabaseMetadata.T_GEGENSTAND_LEHRER_KLASSE);
+        
+        // G-L-K Relationen in die Datenbank schreiben
+        for( int i=0; i<relationen.size(); i++)
+        {
+            // Relation aus der Tabelle holen
+            RelationGegenstandLehrerKlasse r = relationen.get(i);
+            
+            if( db.insertObject( r) == false)
+            {
+                Logger.warning( this, "Fehler bei Gegenstand-Lehrer-Klasse-Relation: " + r);
+                return false;
+            }
+        }
+        
+        Logger.progress( this, "Alle Gegenstände, Lehrer und G-L-K Relationen erfolgreich in die Datenbank geschrieben.");
         
         return true;
     }
@@ -410,7 +407,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
      * @return Beschreibung der exportieren Daten (siehe Interface Databaseable)
      **/
     public String getDescription() {
-        return "Gegenstände und Lehrer";
+        return "Gegenstände, Lehrer und G-L-K Relationen";
     }
 
 }
