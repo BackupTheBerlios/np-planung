@@ -43,6 +43,9 @@ public class Main {
             RaumImporter ri = new RaumImporter( "C:\\gpu005.txt");
             ri.readRooms();
             
+            // Diesen Importer vormerken für Datenbank-Schreiben
+            dbw.addDatabaseable( ri);
+            
             
             
             /*********** LEHRER UND GEGENSTÄNDE *********/
