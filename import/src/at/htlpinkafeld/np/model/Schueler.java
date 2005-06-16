@@ -72,7 +72,7 @@ public class Schueler implements SQLizable {
      * @return true, wenn der Schueler gültig ist, false anderenfalls
      **/
     public boolean isValid() {
-        return !name.equals( "") && klasse != -1;
+        return !name.equals( "") && klasse != -1 && darfNachpruefung();
     }
 
     /**
