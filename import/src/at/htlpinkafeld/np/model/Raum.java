@@ -32,7 +32,10 @@ public class Raum implements SQLizable {
     public Raum( int uid, String bezeichnung, String typ, boolean computerraum) {
         this.uid = uid;
         this.bezeichnung = bezeichnung;
-        this.typ = typ;
+        
+        if( !typ.equals( ""))
+            this.typ = typ;
+        
         this.computerraum = computerraum;
     }
     
@@ -47,7 +50,108 @@ public class Raum implements SQLizable {
     public Raum( int uid, String bezeichnung, String typ) {
         this.uid = uid;
         this.bezeichnung = bezeichnung;
-        this.typ = typ;
+        
+        if( !typ.equals( ""))
+            this.typ = typ;
+        
+        this.computerraum = isComputerraum( typ);
+    }
+    
+    /**
+     * Führt eine automagische Ermittlung durch, ob 
+     * der entsprechende Raum-Typ (zB "EDV-SAAL Zuse") 
+     * ein Computerraum ist oder nicht.
+     * 
+     * @param typ Der Typ des Raums, zB "EDV-SAAL Zuse"
+     * @return true, wenn angenommen wird, dass es sich um einen EDV-Saal handelt, sonst false
+     **/
+    private boolean isComputerraum( String typ) {
+        String s = typ.toLowerCase();
+
+        // Im Schuljahr 2004/05 wurden alle EDV-Säle mit "EDV-SAAL" gekennzeichnet
+        if( s.contains( "edv-saal"))
+            return true;
+        
+        // hier könnte weitere Magie erfolgen für "true"
+        
+        // Im Schuljahr 2004/05 waren alle Klassen fix keine EDV-Säle
+        if( s.contains( "klasse"))
+            return false;
+        
+        // hier könnte weitere Magie erfolgen für "false"
+            
+        return false;
+    }
+    
+    /**
+     * Prüft, ob ein Raum gültig ist, um zur 
+     * Datenbank hinzugefügt zu werden, oder nicht.
+     * Diese Funktion hat automagische Kräfte, um 
+     * festzustellen, ob ein Raum gültig ist oder nicht.
+     *
+     * @return true, wenn der Raum hinzugefügt werden soll, ansonsten false
+     **/
+    public boolean isValid() {
+        String b = bezeichnung.toLowerCase();
+        String t = typ.toLowerCase();
+
+        // Wenn die Bezeichung fehlt, wars wohl doch kein passender Raum
+        if( b.equals( ""))
+            return false;
+        
+        // Ein Raum, der nur "Pseudo" ist (Grund: klar)
+        if( t.contains( "pseudo"))
+            return false;
+        
+        // "KUSTODIAT" kommt in der GPU-Datei vor, macht aber wenig Sinn
+        if( t.contains( "kusto"))
+            return false;
+        
+        // Nein, wir wollen nicht am Bauhof geprüft werden
+        if( t.contains( "bauhof"))
+            return false;
+        
+        // Räume im Werkstättentrakt nur gültig, wenn es sich um Klassen handelt
+        if( b.startsWith( "w-") && !t.contains( "klasse"))
+            return false;
+        
+        // Die Räume im Internat sind zum Großteil Studiersäle, auch ignorieren
+        if( t.contains( "internat"))
+            return false;
+        
+        // Der Raum "Sprechstunde" ist ebenfalls nur ein Pseudo-Raum
+        if( t.contains( "sprechstunde"))
+            return false;
+        
+        // Auch im sportlichen Räumen kann nicht geprüft werden
+        if( t.contains( "hallenbad") || t.contains( "turnsaal"))
+            return false;
+        
+        // Das Heizungslabor (WN-10x) ist ebenfalls nicht geeignet
+        if( t.contains( "heizungslabor"))
+            return false;
+        
+        // Im Gästehaus werden auch keine Nachprüfungen abgehalten
+        if( t.contains( "gästehaus"))
+            return false;
+        
+        // Es existiert der Raum "Werkst. Labor", diesen ebenfalls ignorieren
+        if( t.contains( "werkst"))
+            return false;
+        
+        // Standardmäßig wird alles akzeptiert (außer obige Ausnahmen)
+        return true;
+    }
+    
+    /**
+     * Wandelt dieses Raum-Objekt in einen String um, 
+     * der für Debugging-Zwecke (und sonstige Ausgaben)
+     * verwendet werden kann.
+     *
+     * @return String im der Form "UID Bezeichnung Typ (Computerraum)"
+     **/
+    public String toString() {
+        return uid + " " + bezeichnung + " " + typ + (computerraum ? " (Computerraum)" : "");
     }
 
     
