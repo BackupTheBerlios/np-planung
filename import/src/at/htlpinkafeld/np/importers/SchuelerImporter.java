@@ -127,8 +127,13 @@ public class SchuelerImporter implements Databaseable {
                     if( g != null)
                     {
                         RelationSchuelerGegenstand rel = new RelationSchuelerGegenstand( s, g);
-                        relationen.add( rel);
-                        Logger.debug( this, "Erstelle Relation: Klasse = " + ki.getKlasseByUid( s.getKlasse()).toString() + ", Schüler = " + s.toString() + ", Gegenstand = " + g.toString());
+                        
+                        // Wenn die Relation noch nicht existiert, dann einfügen
+                        if( !RelationSchuelerGegenstand.relationExists( relationen, s, g))
+                        {
+                            relationen.add( rel);
+                            Logger.debug( this, "Erstelle Relation: Klasse = " + ki.getKlasseByUid( s.getKlasse()).toString() + ", Schüler = " + s.toString() + ", Gegenstand = " + g.toString());
+                        }
                     }
                     else
                     {
@@ -149,7 +154,7 @@ public class SchuelerImporter implements Databaseable {
             if( !s.darfNachpruefung())
             {
                 Logger.debug( this, "Schüler darf keine Nachprüfung machen: " + s.toString() + ", wird aus der Liste geworfen.");
-                schueler.remove( i);
+                schueler.remove( s);
             }
         }
         
@@ -157,6 +162,9 @@ public class SchuelerImporter implements Databaseable {
         
         // Die UIDs auf neue Werte setzen, nähere Beschreibung bei reIndex()..
         reIndex();
+        
+        // Überflüssige Relationen entfernen (die Relationen mit entfernten Schülern)
+        RelationSchuelerGegenstand.cleanupRelationen( relationen);
         
         Logger.progress( this, "Alle Schüler wurden erfolgreich importiert und aussortiert.");
     }
@@ -242,7 +250,25 @@ public class SchuelerImporter implements Databaseable {
             }
         }
         
-        Logger.progress( this, "Alle Schüler erfolgreich in die Datenbank geschrieben.");
+        Logger.progress( this, "Schreibe alle Schüler-Gegenstand-Relationen in die Datenbank.");
+        
+        // Schüler-Gegenstand-Relationen Tabelle leeren
+        db.emptyTable( DatabaseMetadata.T_SCHUELER_GEGENSTAND);
+        
+        for( int i=0; i<relationen.size(); i++)
+        {
+            // Relation aus der Tabelle holen
+            RelationSchuelerGegenstand r = relationen.get(i);
+            
+            // Relation in die Datenbank schreiben (siehe DatabaseTool)
+            if( db.insertObject( (SQLizable)r) == false)
+            {
+                Logger.warning( this, "Fehler bei Relation: " + r);
+                return false;
+            }
+        }
+        
+        Logger.progress( this, "Alle Schüler und Schüler-Gegenstand Relationen erfolgreich in die Datenbank geschrieben.");
         
         return true;
     }
@@ -256,6 +282,6 @@ public class SchuelerImporter implements Databaseable {
      * @return String, der die Daten für die Datenbank beschreibt
      **/
     public String getDescription() {
-        return "Schülerdaten";
+        return "Schülerdaten und Schüler-Gegenstand Relationen";
     }
 }
