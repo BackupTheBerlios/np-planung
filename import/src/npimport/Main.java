@@ -84,6 +84,8 @@ public class Main {
             /********* GRUPPENTEINUNGEN (K-L-G) *********/
             GruppenteilungFinder gtf = new GruppenteilungFinder( ki.getKlassen(), rlgi.getGegenstaende(), rlgi.getRelationen());
             gtf.calculateRelationen();
+            
+            gtf.printToHtmlFile( "c:\\gruppenteilung.html");
 
             
             

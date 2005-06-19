@@ -92,6 +92,30 @@ public class Klasse implements SQLizable {
     }
     
     /**
+     * Vergleicht diese Klasse mit einer anderen Klasse.
+     * Das Resultat ist ein Wert ähnlich dem Rückgabewert 
+     * der Funktion String.compareTo(). Diese Funktion 
+     * vergleicht nur den Abteilungsteil eines Klassen-
+     * Namens miteinander, nicht die Nummer oder den 
+     * Buchstaben der Klasse.
+     *
+     * @param k Die Klasse, mit der verglichen werden soll
+     * @return int-Wert wie bei String.compareTo() (es wird nur Abteilung verglichen)
+     **/
+    public int compareToByAbteilung( Klasse k) {
+        return getAbteilung().compareTo( k.getAbteilung());
+    }
+    
+    /**
+     * Liefert die Bezeichung der Abteilung für eine Klasse.
+     *
+     * @return Abteilung dieser Klasse, zB "DV"
+     **/
+    public String getAbteilung() {
+        return name.substring( 2);
+    }
+    
+    /**
      * Vergleicht diese Klasse mit einer anderen auf Gleichheit.
      *
      * @return true, wenn die Klasse die selbe ist, false anderenfalls
@@ -110,7 +134,7 @@ public class Klasse implements SQLizable {
         return !name.equals( "") &&
                 name.length() > 2 &&
                 Character.isDigit( name.charAt( 0)) && 
-                isAbteilung( name.substring( 2));
+                isAbteilung( getAbteilung());
     }
     
     /**

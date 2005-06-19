@@ -108,6 +108,32 @@ public class GruppenteilungFinder {
         Logger.progress( this, "Gruppenteilungen wurden errechnet.");
     }
     
+    /** 
+     * Sortiert die erstellten Gruppenteilung-Relationen 
+     * nach der Abteilung. Dies wird für das abteilungsmäßige 
+     * Ausdrucken der Gruppenteilungs-Formulare benötigt.
+     **/
+    private void sortRelationenByAbteilung() {
+        boolean isSorted = false;
+        
+        while( !isSorted) {
+            isSorted = true;
+            
+            for( int i=0; i<gruppenteilung.size()-1; i++)
+            {
+                RelationGruppenteilung a = gruppenteilung.get(i);
+                RelationGruppenteilung b = gruppenteilung.get(i+1);
+                
+                if( a.getKlasse().compareToByAbteilung( b.getKlasse()) > 0)
+                {
+                    gruppenteilung.setElementAt( b, i);
+                    gruppenteilung.setElementAt( a, i+1);
+                    isSorted = false;
+                }
+            }
+        }
+    }
+    
     /**
      * Nach erfolgreichem Einlesen gibt diese Funktion 
      * die Formulare in einer HTML Datei aus.
@@ -116,6 +142,11 @@ public class GruppenteilungFinder {
      **/
     public void printToHtmlFile( String filename)
     {
+        // Relationen nach Abteilung sortieren
+        sortRelationenByAbteilung();
+        
+        Logger.progress( this, "Schreibe Gruppenteilung HTML Datei in " + filename);
+        
         PrintWriter out;
         try
         {
@@ -128,6 +159,15 @@ public class GruppenteilungFinder {
         }
 
         out.println( "<html><head><title>Nachprüfungsplanung-Formulare</title></head><body>");
+
+        /**
+         * Hier folgt unser "schöner" Dokumenten-Header
+         **/
+        out.println( "<div align=\"center\" style=\"font-size: 48pt;\"><br><br><br><br><br>Nachprüfungsplanung<br>Formulare<br><font style=\"font-size: 16pt;\">Copyright &copy; 2005 Nachprüfungsplanungsteam</font></div>");
+        
+        // Abteilungswechsel-Check-Variablen
+        boolean isNewAbteilung = false;
+        String oldAbteilung = "";
         
         for( int i=0; i<gruppenteilung.size(); i++)
         {
@@ -136,9 +176,21 @@ public class GruppenteilungFinder {
             Gegenstand gegenstand = rgt.getGegenstand();
             Klasse klasse = rgt.getKlasse();
             Vector<Lehrer> lehrer = rgt.getLehrer();
+
+            isNewAbteilung = false;
+            if( oldAbteilung.compareTo( klasse.getAbteilung()) != 0)
+            {
+                isNewAbteilung = true;
+                oldAbteilung = klasse.getAbteilung();
+            }
             
-            out.println( "<div style=\"page-break-inside:avoid;\">");
-            out.println( "<h1>Nachprüfung für Klasse " + klasse.getName() + " (Gegenstand " + gegenstand.getName() + ")</h1>");
+            if( isNewAbteilung)
+            {
+                out.println( "<div style=\"page-break-before: always;\">");
+                out.println( "<h1>Abteilung " + oldAbteilung + "</h1>");
+            }
+            
+            out.println( "<h2>Nachprüfung für Klasse " + klasse.getName() + " (Gegenstand " + gegenstand.getName() + ")</h2>");
             out.println( "<table width=\"100%\" border=\"1\">");
             
             out.println( "<tr>");
@@ -149,7 +201,7 @@ public class GruppenteilungFinder {
             }
             out.println( "</tr>");
             
-            for( int a=0; a<6; a++)
+            for( int a=0; a<3; a++)
             {
                 out.println( "<tr>");
                 
@@ -159,14 +211,17 @@ public class GruppenteilungFinder {
                 out.println( "</tr>");
             }
             out.println( "</table>");
-            out.println( "<p align=\"right\">Bitte das Formular bei Prof. Jusits abgeben (zwecks Nachprüfungsplanung).</p>");
-            out.println( "<hr/>");
-            out.println( "</div>");
             
+            if( isNewAbteilung)
+            {
+                out.println( "</div>");
+            }
         }
         
         out.println( "</body></html>");
         out.close();
+        
+        Logger.progress( this, "Gruppenteilung-Datei geschrieben.");
     }
 
 }
