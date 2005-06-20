@@ -136,12 +136,14 @@ public class GruppenteilungFinder {
     
     /**
      * Nach erfolgreichem Einlesen gibt diese Funktion 
-     * die Formulare in einer HTML Datei aus.
-     *
-     * @param filename Dateiname für die HTML Datei
+     * die Formulare in einer HTML Datei aus. Die Zieldatei 
+     * wird in der Konfigurationsdatei bestimmt.
      **/
-    public void printToHtmlFile( String filename)
+    public void printToHtmlFile()
     {
+        ConfigManager cm = ConfigManager.getInstance();
+        String filename = cm.getProperty( this, "html-file", "c:\\Gruppenteilung-Formulare.html");
+        
         // Relationen nach Abteilung sortieren
         sortRelationenByAbteilung();
         
@@ -201,7 +203,6 @@ public class GruppenteilungFinder {
             }
             out.println( "</tr>");
             
-            ConfigManager cm = ConfigManager.getInstance();
             int anzahl = 3;
             String anz_string = cm.getProperty( this, "html-anzahl", Integer.toString( anzahl));
             

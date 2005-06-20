@@ -224,7 +224,7 @@ public class Schueler implements SQLizable {
      * @return String, der einen SQL "INSERT INTO" Anweisung beinhaltet
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_SCHUELER;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.SCHUELER);
         
         return "INSERT INTO " + table + " (Schuelernummer, Katalognummer, Name, Klassennummer) " +
                     "VALUES (" + uid + ", " + katalognr + ", '" + name + "', " + klasse + ")";

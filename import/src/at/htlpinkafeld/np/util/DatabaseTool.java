@@ -53,14 +53,14 @@ public class DatabaseTool {
         try
         {
             // Treiber laden
-            Class.forName( "sun.jdbc.odbc.JdbcOdbcDriver"); 
+            Class.forName( DatabaseMetadata.getDriverName()); 
             
             // Verbindung herstellen, Connect-String steht in DatabaseMetadata
-            connection = DriverManager.getConnection( DatabaseMetadata.DB_CONN_STRING); 
+            connection = DriverManager.getConnection( DatabaseMetadata.getConnectString()); 
         }
         catch( Exception e)
         {
-            Logger.warning( this, "Fehler bei DB-Verbindung: " + DatabaseMetadata.DB_CONN_STRING);
+            Logger.warning( this, "Fehler bei DB-Verbindung: " + DatabaseMetadata.getConnectString());
             Logger.warning( this, "Ursache für Fehler: " + e.toString());
         }
     }

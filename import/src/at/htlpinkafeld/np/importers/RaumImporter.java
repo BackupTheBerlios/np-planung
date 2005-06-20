@@ -124,7 +124,7 @@ public class RaumImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Räume in die Datenbank.");
         
         // Räume-Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_RAUM);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.RAUM));
         
         // Räume in die Datenbank schreiben
         for( int i=0; i<rooms.size(); i++)

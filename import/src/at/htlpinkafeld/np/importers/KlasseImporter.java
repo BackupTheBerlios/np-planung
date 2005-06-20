@@ -193,7 +193,7 @@ public class KlasseImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Klassen in die Datenbank.");
         
         // Klassen-Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_KLASSE);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.KLASSE));
         
         // Klassen in die Datenbank schreiben
         for( int i=0; i<klassen.size(); i++)

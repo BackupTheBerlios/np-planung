@@ -254,7 +254,7 @@ public class Klasse implements SQLizable {
      * @return SQL "INSERT INTO" Statement für diese Klasse
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_KLASSE;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.KLASSE);
         
         return "INSERT INTO " + table + " (Klassennummer, Bezeichnung) " + 
                     "VALUES " + "(" + uid + ", '" + name + "')";

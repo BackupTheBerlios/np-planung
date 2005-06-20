@@ -364,7 +364,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Gegenstände in die Datenbank.");
         
         // Gegenstands-Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_GEGENSTAND);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.GEGENSTAND));
         
         // Gegenstände in die Datenbank schreiben
         for( int i=0; i<gegenstaende.size(); i++)
@@ -383,7 +383,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Lehrer in die Datenbank.");
         
         // Lehrer-Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_LEHRER);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.LEHRER));
         
         // Lehrer in die Datenbank schreiben
         for( int i=0; i<lehrer.size(); i++)
@@ -402,7 +402,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Gegenstand-Lehrer-Klasse Relationen in die Datenbank.");
         
         // G-L-K-Relationen-Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_GEGENSTAND_LEHRER_KLASSE);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.GEGENSTAND_LEHRER_KLASSE));
         
         // G-L-K Relationen in die Datenbank schreiben
         for( int i=0; i<relationen.size(); i++)

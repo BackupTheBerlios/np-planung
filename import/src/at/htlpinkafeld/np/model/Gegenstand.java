@@ -202,24 +202,6 @@ public class Gegenstand implements SQLizable {
     }
     
     /**
-     * Kleine Helfer-Funktion, um einen Gegenstand in 
-     * einen Vektor (uid, name, schriflich, mündlich) zu 
-     * konvertieren. Dieser Vektor kann für die Darstellung 
-     * in einer JTable verwendet werden.
-     *
-     * @return Vektor für die Ansicht in einer JTable
-     **/
-    public Vector toDataModel()
-    {
-        Vector v = new Vector();
-        v.add( uid);
-        v.add( name);
-        v.add( schriftlich);
-        v.add( muendlich);
-        return v;
-    }
-    
-    /**
      * Prüft, ob der genannte Gegenstand schon im
      * internen Vektor vorhanden ist, oder nicht.
      *
@@ -355,7 +337,7 @@ public class Gegenstand implements SQLizable {
      * @return SQL "INSERT INTO" Statement für diesen Gegenstand
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_GEGENSTAND;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.GEGENSTAND);
         
         /**
          * Für MS Access scheint zu gelten, dass ein "true"

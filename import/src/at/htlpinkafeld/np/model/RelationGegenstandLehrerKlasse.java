@@ -244,7 +244,7 @@ public class RelationGegenstandLehrerKlasse implements SQLizable {
      * @return SQL "INSERT INTO" Befehl, mit dem dieses Objekt in die Datenbank geschrieben werden kann
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_GEGENSTAND_LEHRER_KLASSE;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.GEGENSTAND_LEHRER_KLASSE);
 
         int g_num = gegenstand.getUid();
         int l_num = lehrer.getUid();

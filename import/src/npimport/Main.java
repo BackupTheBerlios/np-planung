@@ -28,9 +28,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package npimport;
 
 import java.util.*;
+import java.io.*;
+
 import at.htlpinkafeld.np.frontend.*;
 import at.htlpinkafeld.np.importers.*;
 import at.htlpinkafeld.np.util.*;
+import at.htlpinkafeld.np.devel.*;
 
 /**
  * Die Main Klasse ist das Hauptprogramm des 
@@ -40,6 +43,9 @@ import at.htlpinkafeld.np.util.*;
  */
 public class Main {
     private static String CONFIGFILE = "c:\\np-import.xml";
+    
+    // Soll ein Import stattfinden oder testen wir etwas anderes?
+    private static final boolean doImport = false;
 
     /**
      * Dies ist die Hauptklasse von der aus das 
@@ -64,57 +70,63 @@ public class Main {
         try
         {
             /********* KONFIGURATION EINLESEN **********/
-            cm.readFromFile( CONFIGFILE);
+            try
+            {
+                cm.readFromFile( CONFIGFILE);
+            }
+            catch( IOException ioe)
+            {
+                Main error_object = new Main();
+                
+                Logger.message( error_object, "Konnte Default-Konfiguration nicht laden. Benutze Standardwerte.");
+                
+                Logger.debug( error_object, "Fehler beim Lesen der Konfiguration: " + CONFIGFILE);
+                Logger.debug( error_object, "Obiger Fehler ist folgender: " + ioe.toString());
+            }
             
-            /******************* KLASSEN ***************/
-            KlasseImporter ki = new KlasseImporter( "C:\\gpu002.txt");
-            ki.readKlassen();
-            
-            // Diesen Importer vormerken für Datenbank-Schreiben
-            dbw.addDatabaseable( ki);
-            
-            
-            
-            /******************** RÄUME *****************/
-            RaumImporter ri = new RaumImporter( "C:\\gpu005.txt");
-            ri.readRooms();
-            
-            // Diesen Importer vormerken für Datenbank-Schreiben
-            dbw.addDatabaseable( ri);
-            
-            
-            
-            /*********** LEHRER UND GEGENSTÄNDE *********/
-            LehrerGegenstandImporter lgi = new LehrerGegenstandImporter( "C:\\gpu008.txt");
-            lgi.readLehrerGegenstaende();
-            
-            RelationGegenstandLehrerImporter rlgi = new RelationGegenstandLehrerImporter( "C:\\gpu002.txt", ki, lgi);
-            rlgi.readLehrerGegenstaende();
-            
-            // Diesen Importer vormerken für Datenbank-Schreiben
-            dbw.addDatabaseable( rlgi);
-            
-            
-            
-            /********* GRUPPENTEINUNGEN (K-L-G) *********/
-            GruppenteilungFinder gtf = new GruppenteilungFinder( ki.getKlassen(), rlgi.getGegenstaende(), rlgi.getRelationen());
-            gtf.calculateRelationen();
-            
-            gtf.printToHtmlFile( "c:\\gruppenteilung.html");
+            if( doImport)
+            {
+                /******************* KLASSEN ***************/
+                KlasseImporter ki = new KlasseImporter( "C:\\gpu002.txt");
+                ki.readKlassen();
 
+                // Diesen Importer vormerken für Datenbank-Schreiben
+                dbw.addDatabaseable( ki);
+
+                /******************** RÄUME *****************/
+                RaumImporter ri = new RaumImporter( "C:\\gpu005.txt");
+                ri.readRooms();
             
+                // Diesen Importer vormerken für Datenbank-Schreiben
+                dbw.addDatabaseable( ri);
+
+                /*********** LEHRER UND GEGENSTÄNDE *********/
+                LehrerGegenstandImporter lgi = new LehrerGegenstandImporter( "C:\\gpu008.txt");
+                lgi.readLehrerGegenstaende();
             
-            /****************** SCHÜLER ****************/
-            SchuelerImporter si = new SchuelerImporter( "C:\\SchuelermitNoten.csv", ki, rlgi);
-            si.readSchueler();
+                RelationGegenstandLehrerImporter rlgi = new RelationGegenstandLehrerImporter( "C:\\gpu002.txt", ki, lgi);
+                rlgi.readLehrerGegenstaende();
             
-            // Diesen Importer vormerken für Datenbank-Schreiben
-            dbw.addDatabaseable( si);
+                // Diesen Importer vormerken für Datenbank-Schreiben
+                dbw.addDatabaseable( rlgi);
+
+                /********* GRUPPENTEINUNGEN (K-L-G) *********/
+                GruppenteilungFinder gtf = new GruppenteilungFinder( ki.getKlassen(), rlgi.getGegenstaende(), rlgi.getRelationen());
+                gtf.calculateRelationen();
             
+                // Gruppenteilung in die HTML Datei schreiben (Position wird in der Konfiguration angegeben)
+                gtf.printToHtmlFile();
+
+                /****************** SCHÜLER ****************/
+                SchuelerImporter si = new SchuelerImporter( "C:\\SchuelermitNoten.csv", ki, rlgi);
+                si.readSchueler();
             
+                // Diesen Importer vormerken für Datenbank-Schreiben
+                dbw.addDatabaseable( si);
             
-            /*********** Hier passiert die Magie **********/
-            dbw.writeAll();
+                /*********** Hier passiert die Magie **********/
+                dbw.writeAll();
+            }
             
             /********** KONFIGURATION SPEICHERN ***********/
             cm.saveToFile( CONFIGFILE);

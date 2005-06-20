@@ -104,12 +104,26 @@ public class ConfigManager {
      *
      * @param o Ein Objekt, für das die Eingenschaft zu holen ist
      * @param name Der Name der Eigenschaft
-     * @param def "Default-Value", falls die Eigenschaft nicht gesetzt ist
+     * @param def "Default-Value", falls die Eigenschaft nicht gesetzt ist (oder null)
      * @return Wert der Eigenschaft, oder "Default-Value", wenn nicht gesetzt
      **/
     public String getProperty( Object o, String name, String def) {
         String key = getPropertyId( o.getClass(), name);
-        String value = properties.getProperty( key);
+        return getProperty( key, def);
+    }
+    
+    /**
+     * Liefert eine Eigenschaft unter Angabe eines kompletten 
+     * Key-Namens. Dies kann zB von einem Konfigurationstool 
+     * verwendet werden, um gefundenen Properties direkt zu 
+     * setzen, ohne vorher ein Objekt erzeugt zu haben.
+     *
+     * @param full_key Der komplette Name des Keys, der zu holen ist
+     * @param def Der Default-Wert, falls die Eigenschaft nicht gesetzt ist (oder null)
+     * @return Wert für diesen Key, oder Default-Wert, wenn Eigenschaft nicht gesetzt
+     **/
+    public String getProperty( String full_key, String def) {
+        String value = properties.getProperty( full_key);
         
         /**
          * Falls wir keinen Wert haben, Default-Wert nehmen und speichern
@@ -117,7 +131,7 @@ public class ConfigManager {
          **/
         if( value == null && def != null)
         {
-            setProperty( o, name, def);
+            setProperty( full_key, def);
             value = def;
         }
         
@@ -135,6 +149,33 @@ public class ConfigManager {
      **/
     public void setProperty( Object o, String name, String value) {
         String key = getPropertyId( o.getClass(), name);
-        properties.setProperty( key, value);
-    }    
+        setProperty( key, value);
+    }
+    
+    /**
+     * Speichert eine Eigenschaft mit komplettem Key.
+     * 
+     * @param full_key Der komplette Key zu der Eigenschaft
+     * @param value Der zu speichernde Wert der Eigenscahft
+     **/
+    public void setProperty( String full_key, String value) {
+        properties.setProperty( full_key, value);
+    }
+    
+    /**
+     * Liefert eine Liste mit Property-Namen, die im ConfigManager
+     * gesetzt sind.
+     *
+     * @return Vektor mit den Namen der Properties
+     **/
+    public Vector<String> getPropertyNames() {
+        Vector<String> v = new Vector<String>();
+        
+        Enumeration e = properties.propertyNames();
+        
+        while( e.hasMoreElements())
+            v.add( (String)e.nextElement());
+        
+        return v;
+    }
 }

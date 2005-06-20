@@ -146,7 +146,7 @@ public class RelationSchuelerGegenstand implements SQLizable {
      * @return SQL "INSERT INTO" Statement für diese Relation
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_SCHUELER_GEGENSTAND;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.SCHUELER_GEGENSTAND);
         
         int s_num = schueler.getUid();
         int g_num = gegenstand.getUid();

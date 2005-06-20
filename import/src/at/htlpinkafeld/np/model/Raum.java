@@ -220,7 +220,7 @@ public class Raum implements SQLizable {
      * @return SQL "INSERT INTO" Statement für dieses Raum
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_RAUM;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.RAUM);
         
         return "INSERT INTO " + table + " (Klassennummer, Bezeichnung, Typ, Größe, Computerraum) " + 
                     "VALUES (" + uid + ", '" + bezeichnung + "', '" + typ + "', 0, " + DatabaseTool.toDatabaseInt( computerraum) + ")";

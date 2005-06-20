@@ -235,7 +235,7 @@ public class Lehrer implements SQLizable {
      * @return SQL "INSERT INTO" Befehl für diesen Lehrer
      **/
     public String toSqlInsert() {
-        String table = DatabaseMetadata.T_LEHRER;
+        String table = DatabaseMetadata.getTableName( DatabaseMetadata.LEHRER);
         
         /**
          * Für MS Access scheint zu gelten, dass ein "true"

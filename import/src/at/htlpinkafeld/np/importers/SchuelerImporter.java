@@ -217,25 +217,6 @@ public class SchuelerImporter implements Databaseable {
     }
     
     /**
-     * Liefert die Spaltenüberschriften der
-     * Schülertabelle, um diese in einer JTable zu benutzen
-     *
-     * @return Vektor, der die Schülerdatenheader beinhaltet
-     */
-    public Vector getHeaders()
-    {
-        Vector headers = new Vector();
-        
-        headers.add( "UID");
-        headers.add( "Klasse");
-        headers.add( "Katalognummer");
-        headers.add( "Name");
-        headers.add( "Gegenstand");
-        
-        return headers;
-    }
-    
-    /**
      * Gibt die Liste der Schüler auf System.out aus.
      * Diese Funktion ist für Debugging-Zwecke nützlich.
      **/
@@ -257,7 +238,7 @@ public class SchuelerImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Schüler in die Datenbank.");
         
         // Schueler-Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_SCHUELER);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.SCHUELER));
         
         for( int i=0; i<schueler.size(); i++)
         {
@@ -275,7 +256,7 @@ public class SchuelerImporter implements Databaseable {
         Logger.progress( this, "Schreibe alle Schüler-Gegenstand-Relationen in die Datenbank.");
         
         // Schüler-Gegenstand-Relationen Tabelle leeren
-        db.emptyTable( DatabaseMetadata.T_SCHUELER_GEGENSTAND);
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.SCHUELER_GEGENSTAND));
         
         for( int i=0; i<relationen.size(); i++)
         {
