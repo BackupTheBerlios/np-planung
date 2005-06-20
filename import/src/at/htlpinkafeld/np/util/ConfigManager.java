@@ -78,7 +78,7 @@ public class ConfigManager {
     }
     
     public void saveToFile( String filename) throws IOException {
-        Logger.progress( this, "Speicher Konfigurationsdaten nach \"" + filename + "\".");
+        Logger.progress( this, "Speichere Konfigurationsdaten nach \"" + filename + "\".");
         FileOutputStream os = new FileOutputStream( new File( filename));
         
         properties.storeToXML( os, "http://np-planung.berlios.de/", "UTF-8");
