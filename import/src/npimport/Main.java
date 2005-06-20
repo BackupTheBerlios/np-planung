@@ -39,6 +39,7 @@ import at.htlpinkafeld.np.util.*;
  * @author Thomas Perl <thp@perli.net>
  */
 public class Main {
+    private static String CONFIGFILE = "c:\\np-import.xml";
 
     /**
      * Dies ist die Hauptklasse von der aus das 
@@ -48,9 +49,23 @@ public class Main {
      */
     public static void main(String[] args) {
         DBWriter dbw = new DBWriter();
+        ConfigManager cm = ConfigManager.getInstance();
+        
+        /**
+         * Wenn als Kommandozeilenargument etwas angegeben wurde, 
+         * dann ist der erste Parameter der Name der Konfigurations-
+         * Datei, deshalb die Variable anpassen.
+         **/
+        if( args.length > 0)
+        {
+            CONFIGFILE = args[0];
+        }
         
         try
         {
+            /********* KONFIGURATION EINLESEN **********/
+            cm.readFromFile( CONFIGFILE);
+            
             /******************* KLASSEN ***************/
             KlasseImporter ki = new KlasseImporter( "C:\\gpu002.txt");
             ki.readKlassen();
@@ -100,6 +115,9 @@ public class Main {
             
             /*********** Hier passiert die Magie **********/
             dbw.writeAll();
+            
+            /********** KONFIGURATION SPEICHERN ***********/
+            cm.saveToFile( CONFIGFILE);
         }
         catch( Exception e)
         {

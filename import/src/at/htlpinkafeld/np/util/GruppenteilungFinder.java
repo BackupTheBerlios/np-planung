@@ -201,7 +201,18 @@ public class GruppenteilungFinder {
             }
             out.println( "</tr>");
             
-            for( int a=0; a<3; a++)
+            ConfigManager cm = ConfigManager.getInstance();
+            int anzahl = 3;
+            String anz_string = cm.getProperty( this, "html-anzahl", Integer.toString( anzahl));
+            
+            try {
+                anzahl = Integer.parseInt( anz_string);
+            }
+            catch( NumberFormatException e) {
+                Logger.warning( this, "Fehler beim Umwandeln von Anzahl für \"" + anz_string + "\": " + e.toString());
+            }
+            
+            for( int a=0; a<anzahl; a++)
             {
                 out.println( "<tr>");
                 
