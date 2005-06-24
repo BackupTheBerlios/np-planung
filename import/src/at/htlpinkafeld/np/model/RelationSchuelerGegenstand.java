@@ -79,6 +79,12 @@ public class RelationSchuelerGegenstand implements SQLizable {
         return false;
     }
     
+    /**
+     * Bereinigt eine Liste von Relationen (für Schüler, die nicht 
+     * mehr Prüfung machen dürfen, oder schueler.isValid() == false.
+     *
+     * @param relationen Ein Vektor von Relationen, der zu bereinigen ist
+     **/
     public static void cleanupRelationen( Vector<RelationSchuelerGegenstand> relationen) {
         // Von hinten durchgehen, weil wir auch etwas herauslöschen
         for( int i=relationen.size()-1; i>=0; i--)
@@ -88,6 +94,26 @@ public class RelationSchuelerGegenstand implements SQLizable {
             // Wenn der Schüler nicht mehr gültig ist, dann löschen
             if( !r.getSchueler().isValid())
                 relationen.remove( r);
+        }
+    }
+
+    /**
+     * Setzt eine bestehende Relation zwischen Schüler und Gegenstand 
+     * auf eine neue, wobei die Gruppen-Nummer immer auf die neue 
+     * gesetzt wird. Somit kann ein Gegenstand auf die richtige Gruppe
+     * gesetzt werden.
+     *
+     * @param relationen Ein Vektor von Relationen, der upgedated werden soll
+     * @param schueler Ein Schüler, für den der Gegenstand upgedated werden soll
+     * @param gegenstand Der neue Gegenstand, der gesetzt werden soll
+     **/
+    public static void updateRelation( Vector<RelationSchuelerGegenstand> relationen, Schueler schueler, Gegenstand gegenstand) {
+        for( int i=0; i<relationen.size(); i++)
+        {
+            RelationSchuelerGegenstand r = relationen.get(i);
+            
+            if( r.getSchueler().equals( schueler) && r.getGegenstand().equalsIgnoreGruppe( gegenstand))
+                r.setGegenstand( gegenstand);
         }
     }
     

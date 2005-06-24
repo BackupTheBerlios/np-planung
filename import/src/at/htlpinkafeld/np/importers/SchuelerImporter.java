@@ -32,9 +32,11 @@ import java.io.*;
 import java.util.*;
 import javax.swing.table.*;
 import com.Ostermiller.util.*;
+
 import at.htlpinkafeld.np.model.*;
 import at.htlpinkafeld.np.devel.*;
 import at.htlpinkafeld.np.util.*;
+import at.htlpinkafeld.np.frontend.*;
 
 /**
  * Die Klasse SchuelerImporter liest Daten aus 
@@ -51,6 +53,7 @@ public class SchuelerImporter implements Databaseable {
     
     private Vector<Schueler> schueler = null;
     private Vector<RelationSchuelerGegenstand> relationen = null;
+    private Vector<RelationSchuelerKlasseGegenstandMoeglichkeiten> rel_sgkm = null;
 
     private static final int KLASSE = 0;
     private static final int KATALOG = 1;
@@ -80,6 +83,7 @@ public class SchuelerImporter implements Databaseable {
         
         schueler = new Vector<Schueler>();
         relationen = new Vector<RelationSchuelerGegenstand>();
+        rel_sgkm = new Vector<RelationSchuelerKlasseGegenstandMoeglichkeiten>();
     }
     
     /**
@@ -94,6 +98,9 @@ public class SchuelerImporter implements Databaseable {
     {
         String [] line = null;
         int uid = 1; // Zu vergebende UID
+        
+        // Gegenstand-Lehrer-Klasse Relationen
+        Vector<RelationGegenstandLehrerKlasse> glk_rel = lgi.getRelationen();
         
         Logger.progress( this, "Lese Schüler und Noten aus " + filename);
         
@@ -117,7 +124,9 @@ public class SchuelerImporter implements Databaseable {
                     continue;
                 }
                 
-                Schueler s = new Schueler( katalognr, name, ki.findKlasse( line[KLASSE]));
+                int klasse_uid = ki.findKlasse( line[KLASSE]);
+                
+                Schueler s = new Schueler( katalognr, name, klasse_uid);
                 
                 if( s.isValid())
                 {
@@ -144,8 +153,24 @@ public class SchuelerImporter implements Databaseable {
                     // Einen 5er bzw Nicht Beurteilt mehr, also erhöhe den Counter
                     s.erhoeheAnzahl5er();
                     
-                    // TODO: Schueler-Gegenstand Relationen erstellen
+                    // Gegenstand finden (an sich.. muss noch nicht der endgültige sein)
                     Gegenstand g = lgi.getGegenstandByUid( lgi.findGegenstand( line[GEGENSTAND]));
+                    
+                    // Klasse-Objekt finden
+                    Klasse k = ki.getKlasseByUid( klasse_uid);
+
+                    Vector<RelationGegenstandLehrerKlasse> moeglichkeiten = RelationGegenstandLehrerKlasse.getRelationenByGegenstandKlasse( glk_rel, g, k);
+                    
+                    if( moeglichkeiten.size() == 1)
+                    {
+                        // Wir haben nur einen Gegenstand, keine Gruppenteilung.. fertig! :)
+                    }
+                    else
+                    {
+                        // Wir müssen einen Gegenstand auswählen lassen, das merken wir uns vorerst mal vor
+                        rel_sgkm.add( new RelationSchuelerKlasseGegenstandMoeglichkeiten( s, k, g, moeglichkeiten));
+                    }
+                    
                     if( g != null)
                     {
                         RelationSchuelerGegenstand rel = new RelationSchuelerGegenstand( s, g);
@@ -187,8 +212,40 @@ public class SchuelerImporter implements Databaseable {
         
         // Überflüssige Relationen entfernen (die Relationen mit entfernten Schülern)
         RelationSchuelerGegenstand.cleanupRelationen( relationen);
+        RelationSchuelerKlasseGegenstandMoeglichkeiten.cleanupRelationen( rel_sgkm);
         
         Logger.progress( this, "Alle Schüler wurden erfolgreich importiert und aussortiert.");
+        
+        Logger.progress( this, "Beginne mit der Gruppenteilung-Abfrage für Schüler.");
+        
+        for( int i=0; i<rel_sgkm.size(); i++)
+        {
+            RelationSchuelerKlasseGegenstandMoeglichkeiten sgkm = rel_sgkm.get(i);
+            
+            GruppenteilungLehrerChooser chooser = new GruppenteilungLehrerChooser( MainDialog.getInstance(), sgkm);
+            if( chooser.isCancelled())
+            {
+                int skipped = rel_sgkm.size()-i;
+                Logger.warning( this, "User hat Gruppenteilung-Abfrage abgebrochen.");
+                Logger.warning( this, "Anzahl der nicht bearbeiteten Gruppenteilung-Abfragen: " + skipped);
+                break;
+            }
+            else
+            {
+                // Relation so ändern, dass richtiger Gegenstand in der Relation steht
+                Gegenstand neu_g = chooser.getSeletedGegenstand();
+                if( neu_g != null)
+                {
+                    RelationSchuelerGegenstand.updateRelation( relationen, sgkm.getSchueler(), neu_g);
+                }
+                else
+                {
+                    Logger.warning( this, "Gegenstand war null - keine Änderung der Relation für Schüler" + sgkm.getSchueler().getName());
+                }
+            }
+        }
+        
+        Logger.progress( this, "Gruppenteilung-Abfrage für Schüler wurde beendet.");
     }
     
     /**

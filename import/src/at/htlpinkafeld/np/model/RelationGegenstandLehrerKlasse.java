@@ -151,6 +151,7 @@ public class RelationGegenstandLehrerKlasse implements SQLizable {
      * @param relationen Die Relationen, die zu durchsuchen sind (als Vektor)
      * @param gegenstand Der Gegenstand, für den die Lehrer zu suchen sind
      * @param klasse Die Klasse, für die die Lehrer zu suchen sind
+     * @return Vektor von Lehrern, die für diesen Gegenstand + Klasse zutreffen
      **/
     public static Vector<Lehrer> getLehrerByGegenstandKlasse( Vector <RelationGegenstandLehrerKlasse> relationen, Gegenstand gegenstand, Klasse klasse)
     {
@@ -167,6 +168,33 @@ public class RelationGegenstandLehrerKlasse implements SQLizable {
         }
         
         return lehrer;
+    }
+    
+    /**
+     * Liefert eine Liste von Relationen, die auf eine 
+     * Klasse und den passenden Gegenstand passen. Aus 
+     * dieser Liste kann man den Lehrer auswählen 
+     * lassen, der für einen Schüler unterrichten wird.
+     *
+     * @param relationen Die Relationen, die zu durchsuchen sind (als Vektor)
+     * @param gegenstand Der Gegenstand, für den die Relationen zu suchen sind
+     * @param klasse Die Klasse, für die die Relationen zu suchen sind
+     * @return Vektor von Lehrern, auf die dieser Gegenstand + Klasse zutreffen
+     **/
+    public static Vector<RelationGegenstandLehrerKlasse> getRelationenByGegenstandKlasse( Vector<RelationGegenstandLehrerKlasse> relationen, Gegenstand gegenstand, Klasse klasse)
+    {
+        Vector<RelationGegenstandLehrerKlasse> rel = new Vector<RelationGegenstandLehrerKlasse>();
+        
+        for( int i=0; i<relationen.size(); i++)
+        {
+            RelationGegenstandLehrerKlasse r = relationen.get(i);
+            
+            // Relation hinzufügen, wenn beide Dinge gleich sind
+            if( gegenstand.equalsIgnoreGruppe( r.getGegenstand()) && klasse.equals( r.getKlasse()))
+                rel.add( r);
+        }
+        
+        return rel;
     }
     
     /**
