@@ -30,6 +30,8 @@ package at.htlpinkafeld.np.devel;
 
 import java.io.*;
 
+import at.htlpinkafeld.np.frontend.*;
+
 /**
  * Die Klasse Logger wird vom Nachprüfungseinlesenprogramm 
  * dazu verwendet, um verschiedenste Meldungen aus dem 
@@ -44,7 +46,7 @@ public class Logger {
     private static final boolean isLogging = true;
     
     // Logging aktivieren für Debugging?
-    private static final boolean isDebugging = false;
+    private static boolean isDebugging = false;
     
     // Logging aktivieren für Progressanzeigen?
     private static final boolean isProgress = true;
@@ -114,6 +116,13 @@ public class Logger {
                 
             out.println( msg);
         }
+        
+        MainDialog dialog = MainDialog.getInstance();
+        
+        if( dialog != null)
+        {
+            dialog.logMessage( msg);
+        }
     }
     
     /**
@@ -131,5 +140,19 @@ public class Logger {
         String name = o.getClass().getName();
         
         return name.substring( name.lastIndexOf( ".")+1);
+    }
+    
+    /**
+     * Setzt, ob Debugging eingeschaltet werden soll oder nicht.
+     *
+     * @param debugging true, wenn Debugging aktiviert werden soll, sonst false
+     **/
+    public static void setDebugging( boolean debugging) {
+        isDebugging = debugging;
+        
+        if( isDebugging)
+            log( "Debug-Ausgabe aktiviert.", false);
+        else
+            log( "Debug-Ausgabe deaktiviert.", false);
     }
 }
