@@ -140,8 +140,9 @@ public class ConfigManager {
     
     /**
      * Speichert eine Eigenschaft für ein bestimmtes Objekt.
-     * Dazu würd der Package- oder Klassenname des Objektes genutzt 
-     * (siehe Funktion getPropertyId()!).
+     * Dazu wird der Package- oder Klassenname des Objektes genutzt 
+     * (siehe Funktion getPropertyId()!). Diese Funktion speichert
+     * String-Werte. Diese Funktion speichert String-Werte.
      *
      * @param o Ein Objekt, für das die Eigenschaft zu speichern ist
      * @param name Der Name der Eigenschaft
@@ -153,13 +154,40 @@ public class ConfigManager {
     }
     
     /**
+     * Speichert eine Eigenschaft für ein bestimmtes Objekt.
+     * Dazu wird der Package- oder Klassenname des Objektes
+     * genutzt (siehe Funktion getPropertyId()!). Diese Funktion 
+     * speichert int-Werte.
+     *
+     * @param o Ein Objekt, für das die Eigenschaft zu speichern ist
+     * @param name Der Name der Eigenschaft
+     * @param value Der Wert der Eigenschaft, der gespeichert werden soll
+     **/
+    public void setProperty( Object o, String name, int value) {
+        String key = getPropertyId( o.getClass(), name);
+        setProperty( key, value);
+    }
+    
+    /**
      * Speichert eine Eigenschaft mit komplettem Key.
+     * Diese Funktion kann String-Werte speichern.
      * 
      * @param full_key Der komplette Key zu der Eigenschaft
-     * @param value Der zu speichernde Wert der Eigenscahft
+     * @param value Der zu speichernde Wert der Eigenschaft
      **/
     public void setProperty( String full_key, String value) {
         properties.setProperty( full_key, value);
+    }
+    
+    /**
+     * Speichert eine Eigenschaft mit komplettem Key.
+     * Diese Funktion kann int-Werte speichern.
+     *
+     * @param full_key Der komplette Key zu der Eigenschaft
+     * @param value Der zu speichernde Wert der Eigenschaft
+     **/
+    public void setProperty( String full_key, int value) {
+        properties.setProperty( full_key, Integer.toString( value));
     }
     
     /**
