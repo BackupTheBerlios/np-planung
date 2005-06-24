@@ -60,6 +60,15 @@ public class RelationGruppenteilung {
         this.lehrer = lehrer;
     }
     
+    /**
+     * Prüft, ob eine Relation zwischen einer Klasse und einem Gegenstand bereits
+     * existiert, oder ob so eine Relation noch nicht existiert.
+     *
+     * @param relationen Ein Vektor von Gruppenteilung-Relationen
+     * @param klasse Die Klasse, nach der zu suchen ist
+     * @param gegenstand Der Gegenstand, nach dem zu suchen ist
+     * @return true, wenn bereits eine Relation existieren, sonst false
+     **/
     public static boolean relationExists( Vector<RelationGruppenteilung> relationen, Klasse klasse, Gegenstand gegenstand)
     {
         for( int i=0; i<relationen.size(); i++)
