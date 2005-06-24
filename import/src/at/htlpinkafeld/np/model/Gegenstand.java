@@ -293,9 +293,14 @@ public class Gegenstand implements SQLizable {
         
         if( name.equals( "GPH"))
             return "GSK";
-        
+       
+        /**
+         * Wird anscheinend nicht mehr benötigt - ist falsch?!
+         *
         if( name.equals( "KONP"))
             return "AM";
+         *
+         **/
         
         if( name.equals( "NEPT"))
             return "D";
@@ -306,6 +311,9 @@ public class Gegenstand implements SQLizable {
         // Folgende Übersetzungen seit Schuljahr 2004/05 (thp, <thp@perli.net>)
         if( name.equals( "GWKB"))
             return "GWK";
+        
+        if( name.equals( "RKB"))
+            return "RK";
         
         return name;
     }
