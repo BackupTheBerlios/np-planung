@@ -240,7 +240,7 @@ public class SchuelerImporter implements Databaseable {
                 }
                 else
                 {
-                    Logger.warning( this, "Gegenstand war null - keine Änderung der Relation für Schüler" + sgkm.getSchueler().getName());
+                    Logger.warning( this, "Kein Gegenstand verfügbar - keine Änderung der Relation für Schüler " + sgkm.getSchueler().getName());
                 }
             }
         }
