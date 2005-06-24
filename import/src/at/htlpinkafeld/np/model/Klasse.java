@@ -151,8 +151,8 @@ public class Klasse implements SQLizable {
         if( abt.equals( "DV"))
             return true;
         
-        // Bautechnik (Hoch- und Tiefbau)
-        if( abt.equals( "B") || abt.equals( "H") || abt.equals( "T"))
+        // Bautechnik (Hoch- und Tiefbau), Baufach
+        if( abt.equals( "B") || abt.equals( "H") || abt.equals( "T") || abt.equals( "F"))
             return true;
         
         // Computer- und Leittechnik
