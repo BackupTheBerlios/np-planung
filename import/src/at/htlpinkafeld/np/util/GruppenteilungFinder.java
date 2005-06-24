@@ -133,6 +133,16 @@ public class GruppenteilungFinder {
             }
         }
     }
+
+    /**
+     * Liefert den Namen der Gruppenteilung-HTML Datei zurück, die 
+     * erstellt wird.
+     *
+     * @return Dateiname der Output-Datei für Gruppenteilung-Formulare
+     **/
+    public String getGruppenHtmlFilename() {
+        return ConfigManager.getInstance().getProperty( this, "html-file", "c:\\Gruppenteilung-Formulare.html");
+    }
     
     /**
      * Nach erfolgreichem Einlesen gibt diese Funktion 
@@ -141,8 +151,7 @@ public class GruppenteilungFinder {
      **/
     public void printToHtmlFile()
     {
-        ConfigManager cm = ConfigManager.getInstance();
-        String filename = cm.getProperty( this, "html-file", "c:\\Gruppenteilung-Formulare.html");
+        String filename = getGruppenHtmlFilename();
         
         // Relationen nach Abteilung sortieren
         sortRelationenByAbteilung();
@@ -204,7 +213,7 @@ public class GruppenteilungFinder {
             out.println( "</tr>");
             
             int anzahl = 3;
-            String anz_string = cm.getProperty( this, "html-anzahl", Integer.toString( anzahl));
+            String anz_string = ConfigManager.getInstance().getProperty( this, "html-anzahl", Integer.toString( anzahl));
             
             try {
                 anzahl = Integer.parseInt( anz_string);
