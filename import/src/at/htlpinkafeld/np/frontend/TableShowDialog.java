@@ -87,7 +87,7 @@ public class TableShowDialog extends javax.swing.JDialog {
     }//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        System.exit( 0);
+        dispose();
     }//GEN-LAST:event_formWindowClosed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
