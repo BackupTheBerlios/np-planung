@@ -49,8 +49,8 @@ public class RaumImporter implements Databaseable {
     private Vector<Raum> rooms = null;
     private int uid = 0;
     
-    private static final int BEZEICHNUNG = 0;
-    private static final int TYP = 1;
+    private int BEZEICHNUNG = 0;
+    private int TYP = 1;
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
     
@@ -62,6 +62,17 @@ public class RaumImporter implements Databaseable {
      */
     public RaumImporter( String filename) throws FileNotFoundException, IOException {
         this.filename = filename;
+
+        ConfigManager cm = ConfigManager.getInstance();
+        try
+        {
+            BEZEICHNUNG = Integer.parseInt( cm.getProperty( this, "spalte-bezeichnung", Integer.toString( BEZEICHNUNG)));
+            TYP = Integer.parseInt( cm.getProperty( this, "spalte-typ", Integer.toString( TYP)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Fehler beim Lesen von Konfigurationseigenschaften.");
+        }
         
         parser = new CSVParser( new BufferedReader( new FileReader( filename)));
         rooms = new Vector<Raum>();

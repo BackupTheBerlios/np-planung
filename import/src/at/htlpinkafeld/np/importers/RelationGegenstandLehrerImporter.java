@@ -60,9 +60,9 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
     
-    private static final int KLASSE = 4;
-    private static final int LEHRER = 5;
-    private static final int GEGENSTAND = 6;
+    private int KLASSE = 4;
+    private int LEHRER = 5;
+    private int GEGENSTAND = 6;
     
     /**
      * Erstellt einen neuen RelationGegenstandLehrerImporter,
@@ -76,6 +76,18 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         this.filename = filename;
         this.ki = ki;
         this.lgi = lgi;
+
+        ConfigManager cm = ConfigManager.getInstance();
+        try
+        {
+            KLASSE = Integer.parseInt( cm.getProperty( this, "spalte-klassename", Integer.toString( KLASSE)));
+            LEHRER = Integer.parseInt( cm.getProperty( this, "spalte-lehrername", Integer.toString( LEHRER)));
+            GEGENSTAND = Integer.parseInt( cm.getProperty( this, "spalte-gegenstand", Integer.toString( GEGENSTAND)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Fehler beim Lesen von Konfigurationseigenschaften.");
+        }
         
         parser = new CSVParser( new BufferedReader( new FileReader( filename)));
         gegenstaende = new Vector<Gegenstand>();

@@ -28,13 +28,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package at.htlpinkafeld.np.importers;
 
-import at.htlpinkafeld.np.model.*;
-import at.htlpinkafeld.np.util.*;
-import at.htlpinkafeld.np.devel.*;
-
 import com.Ostermiller.util.*;
 import java.io.*;
 import java.util.*;
+
+import at.htlpinkafeld.np.model.*;
+import at.htlpinkafeld.np.util.*;
+import at.htlpinkafeld.np.devel.*;
 
 /**
  * Die Klasse KlasseImporter wird dazu verwendet, um 
@@ -51,7 +51,7 @@ public class KlasseImporter implements Databaseable {
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
     
-    private static final int KLASSE = 4;
+    private int KLASSE = 4;
     
     /**
      * Erstellt einen neuen KlasseImporter, mit der 
@@ -62,6 +62,16 @@ public class KlasseImporter implements Databaseable {
      **/
     public KlasseImporter( String filename) throws FileNotFoundException, IOException {
         this.filename = filename;
+        
+        ConfigManager cm = ConfigManager.getInstance();
+        try
+        {
+            KLASSE = Integer.parseInt( cm.getProperty( this, "spalte-klassenname", Integer.toString( KLASSE)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Fehler beim Lesen von Konfigurationseigenschaften.");
+        }
         
         parser = new CSVParser( new BufferedReader( new FileReader( filename)));
         klassen = new Vector<Klasse>();

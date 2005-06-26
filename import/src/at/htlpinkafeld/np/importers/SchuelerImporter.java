@@ -55,13 +55,13 @@ public class SchuelerImporter implements Databaseable {
     private Vector<RelationSchuelerGegenstand> relationen = null;
     private Vector<RelationSchuelerKlasseGegenstandMoeglichkeiten> rel_sgkm = null;
 
-    private static final int KLASSE = 0;
-    private static final int KATALOG = 1;
-    private static final int VORNAME = 2;
-    private static final int NACHNAME = 3;
-    private static final int NOTE = 4;
-    private static final int GEGENSTAND = 5;
-    private static final int GEGENSTAND_TXT = 6;
+    private int KLASSE = 0;
+    private int KATALOG = 1;
+    private int VORNAME = 2;
+    private int NACHNAME = 3;
+    private int NOTE = 4;
+    private int GEGENSTAND = 5;
+    private int GEGENSTAND_TXT = 6;
     
     /**
      * Erstellt einen neuen SchuelerImporter, mit dem 
@@ -75,6 +75,22 @@ public class SchuelerImporter implements Databaseable {
         this.filename = filename;
         this.ki = ki;
         this.lgi = lgi;
+
+        ConfigManager cm = ConfigManager.getInstance();
+        try
+        {
+            KLASSE = Integer.parseInt( cm.getProperty( this, "spalte-klasse", Integer.toString( KLASSE)));
+            KATALOG = Integer.parseInt( cm.getProperty( this, "spalte-katalognummer", Integer.toString( KATALOG)));
+            VORNAME = Integer.parseInt( cm.getProperty( this, "spalte-vorname", Integer.toString( VORNAME)));
+            NACHNAME = Integer.parseInt( cm.getProperty( this, "spalte-nachname", Integer.toString( NACHNAME)));
+            NOTE = Integer.parseInt( cm.getProperty( this, "spalte-note", Integer.toString( NOTE)));
+            GEGENSTAND = Integer.parseInt( cm.getProperty( this, "spalte-gegenstand", Integer.toString( GEGENSTAND)));
+            GEGENSTAND_TXT = Integer.parseInt( cm.getProperty( this, "spalte-gegenstand-beschreibung", Integer.toString( GEGENSTAND)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Fehler beim Lesen von Konfigurationseigenschaften.");
+        }
         
         parser = new ExcelCSVParser( new BufferedReader( new FileReader( filename)));
         

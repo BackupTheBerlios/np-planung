@@ -279,16 +279,16 @@ public class RelationGegenstandLehrerKlasse implements SQLizable {
         int k_num = klasse.getUid();
         int dauer = 0;
         
-        // Wenn der Gegenstand schriftlich ist, dauert es eine 3/4 Stunde mehr
+        // Wenn der Gegenstand schriftlich ist, dauert es länger
         if( gegenstand.isSchriftlich())
-            dauer += 45;
+            dauer += gegenstand.getDauerSchriftlich( klasse);
         
-        // Wenn der Gegenstand mündlich ist, dauert es 1/4 Stunde mehr
+        // Wenn der Gegenstand mündlich ist, dauert es ebenfalls länger
         if( gegenstand.isMuendlich())
-            dauer += 15;
+            dauer += gegenstand.getDauerMuendlich( klasse);
         
         return "INSERT INTO " + table + " (Gegenstandsnummer, Lehrernummer, Klassennummer, Dauer) " +
-                    "VALUES (" + g_num + ", " + l_num + ", + " + k_num + ", " + dauer + ")";
+                    "VALUES (" + g_num + ", " + l_num + ", " + k_num + ", " + dauer + ")";
     }
     
 }

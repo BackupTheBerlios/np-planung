@@ -31,6 +31,7 @@ package at.htlpinkafeld.np.model;
 import java.util.*;
 
 import at.htlpinkafeld.np.util.*;
+import at.htlpinkafeld.np.devel.*;
 
 /**
  * Die Klasse Gegenstand beinhaltet alle Informationen, die zu einem 
@@ -53,6 +54,14 @@ public class Gegenstand implements SQLizable {
      **/
     public Gegenstand( String name) {
         this.name = name;
+        
+        ConfigManager cm = ConfigManager.getInstance();
+        
+        // Schriftlich für diesen Gegenstand aus der Konfiguration auslesen
+        schriftlich = Boolean.parseBoolean( cm.getProperty( this, "schriftlich."+name, Boolean.toString( schriftlich)));
+        
+        // Mündlich für diesen Gegenstand aus der Konfiguration auslesen
+        muendlich = Boolean.parseBoolean( cm.getProperty( this, "muendlich."+name, Boolean.toString( muendlich)));
     }
     
     /**
@@ -335,6 +344,62 @@ public class Gegenstand implements SQLizable {
         s += (schriftlich)              ? " schriftlich" : "";
         
         return s;
+    }
+    
+    /**
+     * Liefert die Dauer einer mündlichen Prüfung für eine Klasse.
+     *
+     * @param k Die Klasse, für die die Dauer zu berechnen ist
+     * @return Dauer einer mündlichen Prüfung in Minuten
+     **/
+    public int getDauerMuendlich( Klasse k)
+    {
+        ConfigManager cm = ConfigManager.getInstance();
+        
+        // Standardmäßig wird von einer Viertelstunde ausgegangen
+        int dauer = 15;
+        
+        // Jahrgang der Klasse
+        String jahrgang = Integer.toString( k.getJahrgang());
+        
+        try
+        {
+            dauer = Integer.parseInt( cm.getProperty( this, "dauer.muendlich." + name + "-jahrgang-" + jahrgang, Integer.toString( dauer)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Konnte Daten nicht umwandeln in mündliche Dauer für Klasse " + k);
+        }
+        
+        return dauer;
+    }
+    
+    /**
+     * Liefert die Dauer einer schriftlichen Prüfung für eine Klasse.
+     *
+     * @param k Die Klasse, für die die Dauer zu berechnen ist
+     * @return Dauer einer schriftlichen Prüfung in Minuten
+     **/
+    public int getDauerSchriftlich( Klasse k)
+    {
+        ConfigManager cm = ConfigManager.getInstance();
+        
+        // Standardmäßig wird von einer Stunde (50 Minuten)
+        int dauer = 50;
+        
+        // Jahrgang der Klasse
+        String jahrgang = Integer.toString( k.getJahrgang());
+        
+        try
+        {
+            dauer = Integer.parseInt( cm.getProperty( this, "dauer.schriftlich." + name + "-jahrgang-" + jahrgang, Integer.toString( dauer)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Konnte Daten nicht umwandeln in schriftliche Dauer für Klasse " + k);
+        }
+        
+        return dauer;
     }
 
     public int getGruppe() {

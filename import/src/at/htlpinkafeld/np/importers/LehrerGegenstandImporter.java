@@ -35,6 +35,7 @@ import com.Ostermiller.util.*;
 
 import at.htlpinkafeld.np.model.*;
 import at.htlpinkafeld.np.devel.*;
+import at.htlpinkafeld.np.util.*;
 
 /**
  * Importiert Lehrer und Gegenstände aus der GPU008-Datei.
@@ -54,8 +55,8 @@ public class LehrerGegenstandImporter {
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
     
-    private static final int LEHRER = 0;
-    private static final int GEGENSTAND = 1;
+    private int LEHRER = 0;
+    private int GEGENSTAND = 1;
     
     /**
      * Erstellt einen neuen LehrerGegenstandImporter, mit dem 
@@ -65,6 +66,17 @@ public class LehrerGegenstandImporter {
      */
     public LehrerGegenstandImporter( String filename) throws FileNotFoundException, IOException {
         this.filename = filename;
+
+        ConfigManager cm = ConfigManager.getInstance();
+        try
+        {
+            LEHRER = Integer.parseInt( cm.getProperty( this, "spalte-lehrername", Integer.toString( LEHRER)));
+            GEGENSTAND = Integer.parseInt( cm.getProperty( this, "spalte-gegenstand", Integer.toString( GEGENSTAND)));
+        }
+        catch( NumberFormatException nfe)
+        {
+            Logger.warning( this, "Fehler beim Lesen von Konfigurationseigenschaften.");
+        }
         
         parser = new CSVParser( new BufferedReader( new FileReader( filename)));
         gegenstaende = new Vector<Gegenstand>();

@@ -80,7 +80,15 @@ public class ConfigurationEditor extends javax.swing.JDialog {
         
         pack();
         
+        FrontendUtil.setMaxSize( this, 600, 0);
+        FrontendUtil.setMinSize( this, 0, 600);
+        
         FrontendUtil.centerForm( this);
+        
+        // Infomeldung ausgeben
+        JOptionPane.showMessageDialog( parent,
+                "Möglicherweise werden erst nach einem kompletten Durchlauf\n" + 
+                "alle benötigen Konfigurationseinstelungen sichbar.\n\n");
         
         setVisible( true);
     }
@@ -123,7 +131,16 @@ public class ConfigurationEditor extends javax.swing.JDialog {
             { "util.DatabaseMetadata", "Datenbank-Verbindung" },
             { "util.DatabaseMetadata.tabellen", "Datenbank-Tabellen Namen" },
             { "util.GruppenteilungFinder", "Gruppenteilung-Formulare" },
-            { "util.ImportFiles", "Dateipfade für Import" }
+            { "util.ImportFiles", "Dateipfade für Import" },
+            { "model.Gegenstand.dauer.schriftlich", "Schriftliche Prüfungsdauer" },
+            { "model.Gegenstand.dauer.muendlich", "Mündliche Prüfungsdauer" },
+            { "model.Gegenstand.schriftlich", "Schriftliche Prüfungen" },
+            { "model.Gegenstand.muendlich", "Mündliche Prüfungen" },
+            { "importers.KlasseImporter", "Spalten (nullbasiert) für GPU002 (nur Klassen)" },
+            { "importers.LehrerGegenstandImporter", "Spalten (nullbasiert) für GPU008" },
+            { "importers.RelationGegenstandLehrerImporter", "Spalten (nullbasiert) für GPU002" },
+            { "importers.SchuelerImporter", "Spalten (nullbasiert) für SchulerMitNoten" },
+            { "importers.RaumImporter", "Spalten (nullbasiert) für GPU005" }
         };
          
 

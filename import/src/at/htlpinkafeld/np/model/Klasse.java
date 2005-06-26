@@ -31,6 +31,7 @@ package at.htlpinkafeld.np.model;
 import java.util.*;
 
 import at.htlpinkafeld.np.util.*;
+import at.htlpinkafeld.np.devel.*;
 
 /**
  * Die Klasse "Klasse" beinhaltet alle Daten zu einer Klasse. 
@@ -135,6 +136,29 @@ public class Klasse implements SQLizable {
                 name.length() > 2 &&
                 Character.isDigit( name.charAt( 0)) && 
                 isAbteilung( getAbteilung());
+    }
+    
+    /**
+     * Gibt den Jahrgang der Klasse zurück.
+     *
+     * @return int-Wert, der den Jahrgang der Klasse angibt oder "0" bei Fehler
+     **/
+    public int getJahrgang() {
+        int jahrgang = 0;
+        
+        if( isValid())
+        {
+            try
+            {
+                jahrgang = Integer.parseInt( name.substring( 0, 1));
+            }
+            catch( Exception e)
+            {
+                Logger.warning( this, "Konnte den Jahrgang nicht bestimmen für " + this);
+            }
+        }
+        
+        return jahrgang;
     }
     
     /**
