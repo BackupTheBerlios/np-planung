@@ -50,4 +50,27 @@ public class FrontendUtil {
         
         dialog.setLocation((screen.width - r.width)/2, (screen.height - r.height)/2);
     }
+    
+    /**
+     * Setzt die minimal gewünschte Größe eines Fensters auf 
+     * bestimmte Werte. Der Parameter height (bzw width) kann 
+     * auch auf "0" gesetzt werden, wenn die minimale Größe
+     * des Fensters egal ist.
+     *
+     * @param dialog Das Fenster, das auf die bestimmte Größe gesetzt werden soll
+     * @param height Die Mindesthöhe, die das Fenster haben soll (0 = egal)
+     * @param width Die Mindestbreite, die das Fenster haben soll (0 = egal)
+     **/
+    public static void setMinSize( java.awt.Window dialog, int height, int width)
+    {
+        java.awt.Dimension size = dialog.getSize();
+        
+        if( size.height < height)
+            size.height = height;
+        
+        if( size.width < width)
+            size.width = width;
+        
+        dialog.setSize( size);
+    }
 }
