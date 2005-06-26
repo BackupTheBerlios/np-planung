@@ -73,4 +73,27 @@ public class FrontendUtil {
         
         dialog.setSize( size);
     }
+    
+    /**
+     * Setzt die maximal gewünschte Größe eines Fensters auf 
+     * bestimmte Werte. Der Parameter height (bzw width) kann 
+     * auch auf "0" gesetzt werden, wenn die maximale Größe
+     * des Fensters egal ist.
+     *
+     * @param dialog Das Fenster, das auf die bestimmte Größe gesetzt werden soll
+     * @param height Die Maximalhöhe, die das Fenster haben soll (0 = egal)
+     * @param width Die Maximalbreite, die das Fenster haben soll (0 = egal)
+     **/
+    public static void setMaxSize( java.awt.Window dialog, int height, int width)
+    {
+        java.awt.Dimension size = dialog.getSize();
+        
+        if( size.height > height && height != 0)
+            size.height = height;
+        
+        if( size.width > width && width != 0)
+            size.width = width;
+        
+        dialog.setSize( size);
+    }
 }
