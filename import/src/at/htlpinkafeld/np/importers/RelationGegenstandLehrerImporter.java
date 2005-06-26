@@ -247,6 +247,16 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
     }
     
     /**
+     * Liefert die Lehrertabelle zurück, die zuvor eingelesen werden muss.
+     *
+     * @return Vektor, der alle Lehrer enthält
+     **/
+    public Vector<Lehrer> getLehrer()
+    {
+        return lehrer;
+    }
+    
+    /**
      * Liefert ein Lehrer-Objekt, welches man über 
      * die UID herausfinden kann. Solch ein Lehrer-
      * Objekt wird zum Beispiel dafür benötigt, um 

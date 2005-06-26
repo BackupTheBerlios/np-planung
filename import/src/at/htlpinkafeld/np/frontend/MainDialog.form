@@ -52,6 +52,29 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="MenuDatensaetze">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Datensätze"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="MenuDatensaetzeLehrer">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lehrer bearbeiten..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuDatensaetzeLehrerActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="MenuDatensaetzeGegenstand">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gegenstände bearbeiten..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuDatensaetzeGegenstandActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="MenuLogging">
           <Properties>
             <Property name="text" type="java.lang.String" value="Logging"/>
@@ -138,8 +161,15 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Einlesen von GPU/SASII Dateien"/>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="CheckBoxDebugging">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Debug-Ausgabe aktivieren"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CheckBoxDebuggingActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="CheckBoxGruppenteilung">
           <Properties>
@@ -150,14 +180,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="In die Datenbank schreiben"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="CheckBoxDebugging">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Debug-Ausgabe aktivieren"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CheckBoxDebuggingActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

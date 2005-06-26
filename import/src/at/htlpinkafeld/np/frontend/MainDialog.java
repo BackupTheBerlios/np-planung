@@ -64,6 +64,12 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     private boolean doFormulare = false; // Sollen Gruppenteilung-Formulare erzeugt werden?
     private boolean doDatenbank = false; // Soll in die Datenbank geschrieben werden?
     
+    /**
+     * Hat der User bereits einen Import durchgeführt? Erst wenn dies auf 
+     * "true" ist, können einige Funktionen aktiviert werden.
+     **/
+    private boolean hasImported = false;
+    
     public static final int HOEHE_MIN = 500; // minimale Höhe des Fensters beim Start
     public static final int BREITE_MIN = 700; // minimale Breite des Fensters beim Start
     
@@ -86,26 +92,36 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         initComponents();
         
         // Fenstergröße anpassen
-        // <editor-fold defaultstate="collapsed" desc=" Fenstergröße anpassen ">
-        java.awt.Dimension size = getSize();
-        
-        if( size.height < HOEHE_MIN)
-            size.height = HOEHE_MIN;
-        
-        if( size.width < BREITE_MIN)
-            size.width = BREITE_MIN;
-        
-        setSize( size);
-        // </editor-fold>
+        FrontendUtil.setMinSize( this, HOEHE_MIN, BREITE_MIN);
         
         // Fenster am Bildschirm zentrieren
         FrontendUtil.centerForm( this);
+        
+        // Steuerelemente (de-)aktivieren
+        updateControls();
         
         // Das Fenster anzeigen
         setVisible( true);
         
         // Logger-View auf das Model zeigen lassen
         LoggerList.setModel( dlm);
+    }
+    
+    /**
+     * Diese Funktion enabled bzw disabled alle betreffenden 
+     * Controls, die Funktionen ausführen. Im Grunde genommen 
+     * schaut dies drauf, ob bereits eingelesen wurde, und 
+     * aktiviert (wenn eingelesen wurde) erweiterte Funktionen.
+     **/
+    private void updateControls()
+    {
+        // Einige Funktion werden wir erst nach dem Import aktivieren
+        CheckBoxDatenbank.setEnabled( hasImported);
+        CheckBoxGruppenteilung.setEnabled( hasImported);
+        
+        // Datenbank-Bearbeiten Funktion funktionieren natürlich erst nach dem Einlesen
+        MenuDatensaetzeLehrer.setEnabled( hasImported);
+        MenuDatensaetzeGegenstand.setEnabled( hasImported);
     }
     
     private void readConfig() {
@@ -190,9 +206,9 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     private void initComponents() {
         ConfigPanel = new javax.swing.JPanel();
         CheckBoxEinlesen = new javax.swing.JCheckBox();
+        CheckBoxDebugging = new javax.swing.JCheckBox();
         CheckBoxGruppenteilung = new javax.swing.JCheckBox();
         CheckBoxDatenbank = new javax.swing.JCheckBox();
-        CheckBoxDebugging = new javax.swing.JCheckBox();
         LoggerPanel = new javax.swing.JPanel();
         LoggerScrollPane = new javax.swing.JScrollPane();
         LoggerList = new javax.swing.JList();
@@ -206,6 +222,9 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         MenuKonfiguationSpeichern = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         MenuKonfigurationBearbeiten = new javax.swing.JMenuItem();
+        MenuDatensaetze = new javax.swing.JMenu();
+        MenuDatensaetzeLehrer = new javax.swing.JMenuItem();
+        MenuDatensaetzeGegenstand = new javax.swing.JMenuItem();
         MenuLogging = new javax.swing.JMenu();
         MenuLoggingLeeren = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
@@ -220,14 +239,7 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         ConfigPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(10, 10, 10, 10)));
         CheckBoxEinlesen.setSelected(true);
         CheckBoxEinlesen.setText("Einlesen von GPU/SASII Dateien");
-        CheckBoxEinlesen.setEnabled(false);
         ConfigPanel.add(CheckBoxEinlesen);
-
-        CheckBoxGruppenteilung.setText("Gruppenteilung-Formulare erstellen");
-        ConfigPanel.add(CheckBoxGruppenteilung);
-
-        CheckBoxDatenbank.setText("In die Datenbank schreiben");
-        ConfigPanel.add(CheckBoxDatenbank);
 
         CheckBoxDebugging.setText("Debug-Ausgabe aktivieren");
         CheckBoxDebugging.addActionListener(new java.awt.event.ActionListener() {
@@ -237,6 +249,12 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         });
 
         ConfigPanel.add(CheckBoxDebugging);
+
+        CheckBoxGruppenteilung.setText("Gruppenteilung-Formulare erstellen");
+        ConfigPanel.add(CheckBoxGruppenteilung);
+
+        CheckBoxDatenbank.setText("In die Datenbank schreiben");
+        ConfigPanel.add(CheckBoxDatenbank);
 
         getContentPane().add(ConfigPanel, java.awt.BorderLayout.NORTH);
 
@@ -307,6 +325,27 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
 
         Menu.add(MenuKonfiguration);
 
+        MenuDatensaetze.setText("Datens\u00e4tze");
+        MenuDatensaetzeLehrer.setText("Lehrer bearbeiten...");
+        MenuDatensaetzeLehrer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuDatensaetzeLehrerActionPerformed(evt);
+            }
+        });
+
+        MenuDatensaetze.add(MenuDatensaetzeLehrer);
+
+        MenuDatensaetzeGegenstand.setText("Gegenst\u00e4nde bearbeiten...");
+        MenuDatensaetzeGegenstand.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuDatensaetzeGegenstandActionPerformed(evt);
+            }
+        });
+
+        MenuDatensaetze.add(MenuDatensaetzeGegenstand);
+
+        Menu.add(MenuDatensaetze);
+
         MenuLogging.setText("Logging");
         MenuLoggingLeeren.setText("Log leeren");
         MenuLoggingLeeren.addActionListener(new java.awt.event.ActionListener() {
@@ -347,6 +386,26 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
+
+    private void MenuDatensaetzeGegenstandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuDatensaetzeGegenstandActionPerformed
+        Vector<SQLizable> elemente = new Vector<SQLizable>();
+        Vector<Gegenstand> gegenstaende = rlgi.getGegenstaende();
+        
+        for( int i=0; i<gegenstaende.size(); i++)
+            elemente.add( gegenstaende.get(i));
+        
+        new ChooserList( this, elemente).setVisible( true);
+    }//GEN-LAST:event_MenuDatensaetzeGegenstandActionPerformed
+
+    private void MenuDatensaetzeLehrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuDatensaetzeLehrerActionPerformed
+        Vector<SQLizable> elemente = new Vector<SQLizable>();
+        Vector<Lehrer> lehrer = rlgi.getLehrer();
+        
+        for( int i=0; i<lehrer.size(); i++)
+            elemente.add( lehrer.get(i));
+        
+        new ChooserList( this, elemente).setVisible( true);
+    }//GEN-LAST:event_MenuDatensaetzeLehrerActionPerformed
 
     private void MenuLoggingLeerenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuLoggingLeerenActionPerformed
         // Einfach das Log leeren... :)
@@ -499,6 +558,12 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
             try
             {
                 readFromGPUAndSASII();
+                
+                // Standardmäßig aber nichts mehr einlesen
+                CheckBoxEinlesen.setSelected( false);
+                
+                // Wir haben den Import abgeschlossen - weiter Funktionen aktivieren
+                hasImported = true;
             }
             catch( Exception e)
             {
@@ -507,12 +572,25 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         }
         
         if( doFormulare)
+        {
             generateGruppenteilungFormulare();
+            
+            // Wir haben die Formulare erstellt
+            CheckBoxGruppenteilung.setSelected( false);
+        }
         
         if( doDatenbank)
+        {
             writeToDatabase();
+            
+            // Wir haben in die Datenbank geschrieben
+            CheckBoxDatenbank.setSelected( false);
+        }
         
         Logger.progress( this, "Ausführungs-Thread beendet.");
+        
+        // Nach so einem Lauf gibt es normal weitere Funktionen - diese aktivieren
+        updateControls();
         
         // Man darf wieder klicken!
         BtnExecute.setEnabled( true);
@@ -532,6 +610,9 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuDatei;
     private javax.swing.JMenuItem MenuDateiBeenden;
+    private javax.swing.JMenu MenuDatensaetze;
+    private javax.swing.JMenuItem MenuDatensaetzeGegenstand;
+    private javax.swing.JMenuItem MenuDatensaetzeLehrer;
     private javax.swing.JMenu MenuHilfe;
     private javax.swing.JMenuItem MenuHilfeUeber;
     private javax.swing.JMenuItem MenuKonfiguationSpeichern;

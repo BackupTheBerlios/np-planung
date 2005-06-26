@@ -268,7 +268,7 @@ public class SchuelerImporter implements Databaseable {
      *
      * @return Vektor, der die Schülertabelle beinhaltet
      */
-    public Vector getSchueler()
+    public Vector<Schueler> getSchueler()
     {
         return schueler;
     }

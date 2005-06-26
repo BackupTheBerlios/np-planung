@@ -321,13 +321,20 @@ public class Gegenstand implements SQLizable {
     /**
      * Gibt einen String zurück, der den Gegenstand 
      * repräsentiert. Dieser String hat die Form 
-     * "UID Name Gruppe", und kann für Debugging Zwecke 
+     * "UID Name Gruppe mündlich und schriftlich", und kann für Debugging Zwecke 
      * und andere Ausgaben verwendet werden.
      *
-     * @return String der Form "UID Name Gruppe", der den Gegenstand beschreibt
+     * @return String der Form "UID Name Gruppe mündlich und schriftlich", der den Gegenstand beschreibt
      **/
     public String toString() {
-        return uid + " " + name + " " + gruppe;
+        String s = uid + " " + name + " " + gruppe;
+        
+        /* Mündlich und schriftlich schön ausgeben */
+        s += (muendlich)                ? " mündlich"    : "";
+        s += (muendlich && schriftlich) ? " und"         : "";
+        s += (schriftlich)              ? " schriftlich" : "";
+        
+        return s;
     }
 
     public int getGruppe() {
