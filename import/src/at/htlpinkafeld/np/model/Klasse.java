@@ -133,7 +133,7 @@ public class Klasse implements SQLizable {
      **/
     public boolean isValid() {
         return !name.equals( "") &&
-                name.length() > 2 &&
+                (name.length() > 2 || getAbteilung().equals( "B") && name.length() == 2) &&
                 Character.isDigit( name.charAt( 0)) && 
                 isAbteilung( getAbteilung());
     }
