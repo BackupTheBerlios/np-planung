@@ -32,6 +32,7 @@ import java.util.*;
 
 import at.htlpinkafeld.np.util.*;
 import at.htlpinkafeld.np.devel.*;
+import at.htlpinkafeld.np.frontend.*;
 
 /**
  * Die Klasse "Klasse" beinhaltet alle Daten zu einer Klasse. 
@@ -220,7 +221,9 @@ public class Klasse implements SQLizable {
             int uid = 1;
             
             for( int i=0; i<v.size(); i++)
+            {
                 v.get(i).setUid( uid++);
+            }
         }
     }
     
@@ -236,9 +239,11 @@ public class Klasse implements SQLizable {
     public static int findKlasse( Vector<Klasse> klassen, String name) {
         for( int i=0; i<klassen.size(); i++)
         {
-            Klasse k = klassen.get(i);
+            Klasse k = klassen.get(i);     
             if( name.equals( k.getName()))
+            {
                 return k.getUid();
+            } 
         }
         
         return -1;
@@ -254,7 +259,9 @@ public class Klasse implements SQLizable {
         for( int i=0; i<klassen.size(); i++)
         {
             if( klassen.get(i).equals( k))
+            {
                 return true;
+            }
         }
         
         return false;

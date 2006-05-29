@@ -96,7 +96,7 @@ public class ChooserList extends javax.swing.JDialog {
         setTitle("Datensatz ausw\u00e4hlen");
         BodyPanel.setLayout(new java.awt.BorderLayout());
 
-        BodyPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(1, 10, 1, 10)));
+        BodyPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 10));
         ListScroller.setViewportView(ChooserList);
 
         BodyPanel.add(ListScroller, java.awt.BorderLayout.CENTER);
@@ -126,12 +126,11 @@ public class ChooserList extends javax.swing.JDialog {
         getContentPane().add(BottomPanel, java.awt.BorderLayout.SOUTH);
 
         jLabel1.setText("Um einen Datensatz zu bearbeiten, bitte den gew\u00fcnschten Datensatz ausw\u00e4hlen:");
-        jLabel1.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(10, 10, 10, 10)));
+        jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         getContentPane().add(jLabel1, java.awt.BorderLayout.NORTH);
 
         pack();
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
 
     private void BtnBearbeitenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBearbeitenActionPerformed
         int sel = ChooserList.getSelectedIndex();

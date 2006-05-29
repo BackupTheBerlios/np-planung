@@ -61,6 +61,9 @@ public class DatabaseMetadata {
     // Tabelle für die Beziehungen Schüler-Gegenstand
     public static final int SCHUELER_GEGENSTAND = 7;
     
+    // Tabelle für die Beziehungen Lehrer-Gegenstand
+    public static final int LEHRER_GEGENSTAND = 8;
+    
     /**
      * Privater Konstruktor für Pseudo-Element (instance).
      **/
@@ -115,6 +118,9 @@ public class DatabaseMetadata {
         
         if( which == SCHUELER_GEGENSTAND)
             return getProperty( "tabellen.schueler-gegenstand", "tab_schueler_gegenstand");
+        
+        if( which == LEHRER_GEGENSTAND)
+            return getProperty( "tabellen.lehrer-gegenstand",  "tab_lehrer_gegenstand");
         
         return null;
     }

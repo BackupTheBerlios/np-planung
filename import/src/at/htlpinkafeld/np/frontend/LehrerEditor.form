@@ -99,10 +99,10 @@
             <Property name="text" type="java.lang.String" value="Verfügbarkeit an folgenden Tagen:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="VarMontag">
+        <Component class="javax.swing.JCheckBox" name="VarTag1">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="am Montag"/>
+            <Property name="text" type="java.lang.String" value="am 1. Tag"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="LblVerf2">
@@ -110,10 +110,10 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="VarDienstag">
+        <Component class="javax.swing.JCheckBox" name="VarTag2">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="am Dienstag"/>
+            <Property name="text" type="java.lang.String" value="am 2. Tag"/>
           </Properties>
         </Component>
       </SubComponents>

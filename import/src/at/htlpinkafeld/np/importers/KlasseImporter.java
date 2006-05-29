@@ -99,11 +99,12 @@ public class KlasseImporter implements Databaseable {
         
         while( (line = parser.getLine()) != null)
         {
-            Klasse k = new Klasse( line[KLASSE]);
+            Klasse k = new Klasse( line[KLASSE]); 
             if( k.isValid() && !Klasse.klasseExists( klassen, k))
+            {
                 klassen.add( k);
+            }           
         }
-        
         // Klassen alphabetisch sortieren:
         Klasse.sort( klassen, true);
         

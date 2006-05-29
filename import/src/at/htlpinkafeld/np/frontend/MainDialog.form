@@ -26,7 +26,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="MenuKonfigurationLaden">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Öffnen..."/>
+                <Property name="text" type="java.lang.String" value="&#xd6;ffnen..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuKonfigurationLadenActionPerformed"/>
@@ -54,7 +54,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="MenuDatensaetze">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Datensätze"/>
+            <Property name="text" type="java.lang.String" value="Datens&#xe4;tze"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="MenuDatensaetzeLehrer">
@@ -67,7 +67,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="MenuDatensaetzeGegenstand">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Gegenstände bearbeiten..."/>
+                <Property name="text" type="java.lang.String" value="Gegenst&#xe4;nde bearbeiten..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuDatensaetzeGegenstandActionPerformed"/>
@@ -107,7 +107,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="MenuHilfeUeber">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Über..."/>
+                <Property name="text" type="java.lang.String" value="&#xdc;ber..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuHilfeUeberActionPerformed"/>
@@ -162,6 +162,9 @@
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Einlesen von GPU/SASII Dateien"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CheckBoxEinlesenActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="CheckBoxDebugging">
           <Properties>
@@ -220,7 +223,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="BtnExecute">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Gewählte Aktionen ausführen"/>
+            <Property name="text" type="java.lang.String" value="Gew&#xe4;hlte Aktionen ausf&#xfc;hren"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnExecuteActionPerformed"/>

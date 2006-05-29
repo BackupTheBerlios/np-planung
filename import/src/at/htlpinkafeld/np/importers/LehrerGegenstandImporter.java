@@ -51,6 +51,8 @@ public class LehrerGegenstandImporter {
     private CSVParser parser = null;
     private Vector<Gegenstand> gegenstaende = null;
     private Vector<Lehrer> lehrer = null;
+    private Vector<Lehrer> lehrer_relation = null;  //Lehrer werden 1:1 aus GPU008 importiert  
+    private Vector<Gegenstand> gegenstand_relation = null;  //Gegenstände werden 1:1 aus GPU008 importiert
     private int uid = 0;
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
@@ -81,6 +83,8 @@ public class LehrerGegenstandImporter {
         parser = new CSVParser( new BufferedReader( new FileReader( filename)));
         gegenstaende = new Vector<Gegenstand>();
         lehrer = new Vector<Lehrer>();
+        gegenstand_relation = new Vector<Gegenstand>();
+        lehrer_relation = new Vector<Lehrer>();
     }
     
     /**
@@ -111,6 +115,19 @@ public class LehrerGegenstandImporter {
             Lehrer l = new Lehrer( line[LEHRER]);
             
             /**
+             * Gegenstände und Lehrer werden 1:1 aus GPU008
+             * in die Datenbank geschrieben.
+             * Sie werden für Beisitzerzuteilung im Algorithmus
+             * verwendet (einlesen.mdb --> tab_lehrer_gegenstand).
+             **/
+            if( g.isValid() && l.isValid())
+            {
+                gegenstand_relation.add(g);
+                lehrer_relation.add(l);
+            }
+                
+            
+            /**
              * Wenn "g" ein passender Gegenstand ist, und noch 
              * nicht existiert, dann einfügen in Gegenstand-Tabelle.
              **/
@@ -134,6 +151,26 @@ public class LehrerGegenstandImporter {
         hasRead = true;
         
         Logger.progress( this, "Import von Lehrer+Gegenstand (Test-Daten) fertig.");
+    }
+
+    /**
+     * Liefert die Lehrertabelle zurück, die zuvor eingelesen werden muss.
+     *
+     * @return Vektor, der alle Lehrer enthält (gleiche Reihenfolge wie in gpu008)
+     **/
+    public Vector<Lehrer> getLehrer()
+    {
+        return lehrer_relation;
+    }
+
+    /**
+     * Liefert die Gegenstandstabelle zurück, die zuvor eingelesen werden muss.
+     *
+     * @return Vektor, der alle Gegenstände enthält (gleiche Reihenfolge wie in gpu008)
+     **/
+    public Vector<Gegenstand> getGegenstand()
+    {
+        return gegenstand_relation;
     }
     
     /**
@@ -196,5 +233,15 @@ public class LehrerGegenstandImporter {
     public void debugListGegenstaende() {
         for( int i=0; i<gegenstaende.size(); i++)
             Logger.message( this, "Gegenstand: " + gegenstaende.get(i));
+    }
+    
+    /**
+     * Liefert eine Beschreibung (im Interface Databaseable)
+     * für diese Klasse.
+     *
+     * @return Beschreibung der exportieren Daten (siehe Interface Databaseable)
+     **/
+    public String getDescription() {
+        return "Gegenstände, Lehrer";
     }
 }

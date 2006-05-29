@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package at.htlpinkafeld.np.frontend;
 
+import at.htlpinkafeld.np.util.MyFileFilter;
 import java.util.*;
 import java.lang.*;
 import java.io.*;
@@ -47,7 +48,7 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     // Instance für Singleton Ding
     private static MainDialog instance = null;
     
-    private String CONFIGFILE = "c:\\np-import.xml"; // Konfigurationsdatei, die beim Start geladen wird
+    private String CONFIGFILE = /*"H:\\Projekt\\konfiguration.conf";*/ "c:\\np-import.xml"; // Konfigurationsdatei, die beim Start geladen wird
     private DBWriter dbw = new DBWriter(); // Datenbank-Writer
     private ConfigManager cm = ConfigManager.getInstance(); // Konfigurations-Manager
 
@@ -145,7 +146,7 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         ki = new KlasseImporter( ImportFiles.getFilename( ImportFiles.GPU002));
         ki.readKlassen();
         dbw.addDatabaseable( ki);
-        
+                
         ri = new RaumImporter( ImportFiles.getFilename( ImportFiles.GPU005));
         ri.readRooms();
         dbw.addDatabaseable( ri);
@@ -239,6 +240,12 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         ConfigPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(10, 10, 10, 10)));
         CheckBoxEinlesen.setSelected(true);
         CheckBoxEinlesen.setText("Einlesen von GPU/SASII Dateien");
+        CheckBoxEinlesen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CheckBoxEinlesenActionPerformed(evt);
+            }
+        });
+
         ConfigPanel.add(CheckBoxEinlesen);
 
         CheckBoxDebugging.setText("Debug-Ausgabe aktivieren");
@@ -387,6 +394,10 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     }
     // </editor-fold>//GEN-END:initComponents
 
+    private void CheckBoxEinlesenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckBoxEinlesenActionPerformed
+// TODO add your handling code here:
+    }//GEN-LAST:event_CheckBoxEinlesenActionPerformed
+
     private void MenuDatensaetzeGegenstandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuDatensaetzeGegenstandActionPerformed
         Vector<SQLizable> elemente = new Vector<SQLizable>();
         Vector<Gegenstand> gegenstaende = rlgi.getGegenstaende();
@@ -394,7 +405,7 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
         for( int i=0; i<gegenstaende.size(); i++)
             elemente.add( gegenstaende.get(i));
         
-        new ChooserList( this, elemente).setVisible( true);
+        new ChooserList( this, elemente).setVisible( true);       
     }//GEN-LAST:event_MenuDatensaetzeGegenstandActionPerformed
 
     private void MenuDatensaetzeLehrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuDatensaetzeLehrerActionPerformed
@@ -436,9 +447,16 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void MenuKonfigurationLadenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuKonfigurationLadenActionPerformed
+        String extension=new String("conf"); //Erweiterung für Dateinamen
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogType( JFileChooser.OPEN_DIALOG);
         chooser.setDialogTitle( "Konfigurationsdatei laden");
+        
+        //Filter für Konfigurationsdatei wird erzeugt
+        MyFileFilter filter = new MyFileFilter();
+        filter.addExtension(extension);
+        filter.setDescription("Konfigurationsdatei");
+        chooser.setFileFilter(filter);
         
         if( chooser.showOpenDialog( this) == JFileChooser.APPROVE_OPTION)
         {
@@ -456,24 +474,39 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_MenuKonfigurationLadenActionPerformed
 
     private void MenuLoggingSpeichernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuLoggingSpeichernActionPerformed
+        String extension=new String("txt"); //Erweiterung für Dateinamen
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogType( JFileChooser.SAVE_DIALOG);
         chooser.setDialogTitle( "Log-Datei speichern");
         
+        //Filter für Textdatei wird erzeugt
+        MyFileFilter filter = new MyFileFilter();
+        filter.addExtension(extension);
+        filter.setDescription("Textdokument");
+        chooser.setFileFilter(filter);
+
         if( chooser.showSaveDialog( this) == JFileChooser.APPROVE_OPTION)
         {
             String filename = chooser.getSelectedFile().getAbsolutePath();
             try
             {
-                PrintWriter out = new PrintWriter( new FileOutputStream( new File( filename)));
-                
+                if(filename.contains("."+extension))    //wenn die Erweiterung bereits vorhanden ist
+                {
+                    extension = new String("");     //keine Erweiterung anhängen (ansonsten gibt es eine doppelte Erweiterung, z.B.: .txt.txt)
+                }
+                else
+                {
+                    extension = new String ("."+extension);     //Erweiterung wird angehängt
+                }
+                                
+                PrintWriter out = new PrintWriter( new FileOutputStream( new File( filename+extension)));
                 // Zeile für Zeile schreiben in die Log-Datei
                 for( int i=0; i<dlm.size(); i++)
                     out.println( (String)(dlm.get(i)));
                 
                 out.close();
                 
-                Logger.progress( this, "Logging-Datei erfolgreich gespeichert nach: " + filename);
+                Logger.progress( this, "Logging-Datei erfolgreich gespeichert nach: " + filename+"."+extension);
             }
             catch( Exception e)
             {
@@ -491,17 +524,33 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void MenuKonfiguationSpeichernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuKonfiguationSpeichernActionPerformed
+        String extension=new String("conf"); //Erweiterung für Dateinamen
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogType( JFileChooser.SAVE_DIALOG);
         chooser.setDialogTitle( "Konfigurationsdatei speichern");
+        
+        //Filter für Konfigurationsdatei wird erzeugt
+        MyFileFilter filter = new MyFileFilter();
+        filter.addExtension(extension);
+        filter.setDescription("Konfigurationsdatei");
+        chooser.setFileFilter(filter);
         
         if( chooser.showSaveDialog( this) == JFileChooser.APPROVE_OPTION)
         {
             String filename = chooser.getSelectedFile().getAbsolutePath();
             try
             {
-                cm.saveToFile( filename);
-                Logger.progress( this, "Konfiguration gespeichert: " + filename);
+                if(filename.contains("."+extension))    //wenn die Erweiterung bereits vorhanden ist
+                {
+                    extension = new String("");     //keine Erweiterung anhängen (ansonsten gibt es eine doppelte Erweiterung, z.B.: .txt.txt)
+                }
+                else
+                {
+                    extension = new String ("."+extension);     //Erweiterung wird angehängt
+                }
+                
+                cm.saveToFile( filename +extension);
+                Logger.progress( this, "Konfiguration gespeichert: " + filename +extension);
             }
             catch( Exception e)
             {

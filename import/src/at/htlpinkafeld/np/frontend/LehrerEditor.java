@@ -66,8 +66,8 @@ public class LehrerEditor extends javax.swing.JDialog {
     private void fillValues() {
         VarUid.setText( Integer.toString( lehrer.getUid()));
         VarName.setText( lehrer.getName());
-        VarMontag.setSelected( lehrer.isMontag());
-        VarDienstag.setSelected( lehrer.isDienstag());
+        VarTag1.setSelected( lehrer.isTag1());
+        VarTag2.setSelected( lehrer.isTag2());
     }
     
     /**
@@ -76,8 +76,8 @@ public class LehrerEditor extends javax.swing.JDialog {
      **/
     private void saveValues() {
         lehrer.setName( VarName.getText());
-        lehrer.setMontag( VarMontag.isSelected());
-        lehrer.setDienstag( VarDienstag.isSelected());
+        lehrer.setTag1( VarTag1.isSelected());
+        lehrer.setTag2( VarTag2.isSelected());
     }
     
     /** This method is called from within the constructor to
@@ -96,9 +96,9 @@ public class LehrerEditor extends javax.swing.JDialog {
         LblName = new javax.swing.JLabel();
         VarName = new javax.swing.JTextField();
         LblVerf = new javax.swing.JLabel();
-        VarMontag = new javax.swing.JCheckBox();
+        VarTag1 = new javax.swing.JCheckBox();
         LblVerf2 = new javax.swing.JLabel();
-        VarDienstag = new javax.swing.JCheckBox();
+        VarTag2 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Lehrer-Editor");
@@ -146,16 +146,16 @@ public class LehrerEditor extends javax.swing.JDialog {
         LblVerf.setText("Verf\u00fcgbarkeit an folgenden Tagen:");
         MainPanel.add(LblVerf);
 
-        VarMontag.setSelected(true);
-        VarMontag.setText("am Montag");
-        MainPanel.add(VarMontag);
+        VarTag1.setSelected(true);
+        VarTag1.setText("am 1. Tag");
+        MainPanel.add(VarTag1);
 
         LblVerf2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         MainPanel.add(LblVerf2);
 
-        VarDienstag.setSelected(true);
-        VarDienstag.setText("am Dienstag");
-        MainPanel.add(VarDienstag);
+        VarTag2.setSelected(true);
+        VarTag2.setText("am 2. Tag");
+        MainPanel.add(VarTag2);
 
         getContentPane().add(MainPanel, java.awt.BorderLayout.CENTER);
 
@@ -185,9 +185,9 @@ public class LehrerEditor extends javax.swing.JDialog {
     private javax.swing.JLabel LblVerf;
     private javax.swing.JLabel LblVerf2;
     private javax.swing.JPanel MainPanel;
-    private javax.swing.JCheckBox VarDienstag;
-    private javax.swing.JCheckBox VarMontag;
     private javax.swing.JTextField VarName;
+    private javax.swing.JCheckBox VarTag1;
+    private javax.swing.JCheckBox VarTag2;
     private javax.swing.JLabel VarUid;
     // End of variables declaration//GEN-END:variables
     

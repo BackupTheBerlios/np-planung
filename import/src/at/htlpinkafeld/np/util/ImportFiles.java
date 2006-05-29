@@ -42,6 +42,7 @@ package at.htlpinkafeld.np.util;
 public class ImportFiles {
     public static final int GPU002 = 2;
     public static final int GPU005 = 5;
+    public static final int GPU006 = 6;
     public static final int GPU008 = 8;
     public static final int SASII_SCHUELER_MIT_NOTEN = 9;
     
@@ -68,6 +69,9 @@ public class ImportFiles {
         
         if( which == GPU005)
             return cm.getProperty( new ImportFiles(), "gpu005", "c:\\gpu005.txt");
+        
+        if( which == GPU006)
+            return cm.getProperty( new ImportFiles(), "gpu006", "c:\\gpu006.txt");
         
         if( which == GPU008)
             return cm.getProperty( new ImportFiles(), "gpu008", "c:\\gpu008.txt");

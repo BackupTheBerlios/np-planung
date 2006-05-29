@@ -57,8 +57,10 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
     private KlasseImporter ki = null;
     private LehrerGegenstandImporter lgi = null;
     private Vector<RelationGegenstandLehrerKlasse> relationen = null;
+    private Vector<RelationLehrerGegenstand> relationen2 = null;        //Relationen, die 1:1 aus gpu008 stammen
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
+    private boolean hasImported = false; // Wurde die for-Schleife bereits aufgerufen?
     
     private int KLASSE = 4;
     private int LEHRER = 5;
@@ -76,7 +78,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         this.filename = filename;
         this.ki = ki;
         this.lgi = lgi;
-
+       
         ConfigManager cm = ConfigManager.getInstance();
         try
         {
@@ -93,6 +95,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         gegenstaende = new Vector<Gegenstand>();
         lehrer = new Vector<Lehrer>();
         relationen = new Vector<RelationGegenstandLehrerKlasse>();
+        relationen2 = new Vector<RelationLehrerGegenstand>();
     }
     
     /**
@@ -223,6 +226,20 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
                 RelationGegenstandLehrerKlasse relation_neu = new RelationGegenstandLehrerKlasse( g, l, k);
                 relationen.add( relation_neu);
             }
+            
+            //Wurde die for-Schleife schon einmal aufgerufen?
+            if( !hasImported)
+            {
+                hasImported = true;
+                //Lehrer und Gegenstände 1:1 in relationen2-Vektor schreiben, eingelesene Daten stammen vom LehrerGegenstandImporter
+                for(int i=0; i<lgi.getGegenstand().size(); i++)
+                {
+                    g = lgi.getGegenstand().get(i);
+                    l = lgi.getLehrer().get(i);
+                    relationen2.add(new RelationLehrerGegenstand(g, l));
+                    Logger.debug( this, "Erstelle Relation (G-L): " + g + ", " + l + ".");
+                }                                
+            }            
         }
         
         // Gegenstände alphabetisch sortieren (und re-indexing):
@@ -258,13 +275,14 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         return relationen;
     }
     
+    
     /**
      * Liefert die Lehrertabelle zurück, die zuvor eingelesen werden muss.
      *
      * @return Vektor, der alle Lehrer enthält
      **/
     public Vector<Lehrer> getLehrer()
-    {
+    {       
         return lehrer;
     }
     
@@ -440,6 +458,27 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
         }
         
         Logger.progress( this, "Alle Gegenstände, Lehrer und G-L-K Relationen erfolgreich in die Datenbank geschrieben.");
+        
+        Logger.progress( this, "Schreibe alle Gegenstand-Lehrer Relationen in die Datenbank.");
+        
+        // G-L-Relationen-Tabelle leeren
+        db.emptyTable( DatabaseMetadata.getTableName( DatabaseMetadata.LEHRER_GEGENSTAND));
+        
+        // G-L-Relationen in die Datenbank schreiben
+        for( int i=0; i<relationen2.size(); i++)
+        {
+            // Relation aus der Tabelle holen
+            RelationLehrerGegenstand r = relationen2.get(i);
+            // Klasse RelationLehrerGegenstand, die Gegenstände und Lehrer in die Tabelle schreibt
+
+            if( db.insertObject( r) == false)
+            {
+                Logger.warning( this, "Fehler bei Gegenstand-Lehrer-Relation: " + r);
+                return false;
+            }
+        }
+        
+        Logger.progress( this, "Alle Gegenstände und Lehrer erfolgreich in die Datenbank geschrieben.");
         
         return true;
     }

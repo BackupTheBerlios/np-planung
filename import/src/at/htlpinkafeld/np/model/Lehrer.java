@@ -43,8 +43,8 @@ import at.htlpinkafeld.np.util.*;
 public class Lehrer implements SQLizable {
     private int uid = 0; // UID des Lehrers
     private String name = ""; // 4-stelliges Kürzel des Lehrers (zB ANTA)
-    private boolean montag = true; // Kann der Lehrer am ersten Tag prüfen?
-    private boolean dienstag = true; // Kann der Lehrer am zweiten Tag prüfen?
+    private boolean tag1 = true; // Kann der Lehrer am ersten Tag prüfen?
+    private boolean tag2 = true; // Kann der Lehrer am zweiten Tag prüfen?
     
     /**
      * Erstellt einen neuen Lehrer.
@@ -62,14 +62,14 @@ public class Lehrer implements SQLizable {
      *
      * @param uid Die UID des Lehrers
      * @param name Das 4-stellige Kürzel des Lehrers (zB ANTA)
-     * @param montag true, wenn der Lehrer am Montag prüfen kann
-     * @param dienstag true, wenn der Lehrer am Dienstag prüfen kann
+     * @param tag1 true, wenn der Lehrer am 1. Tag prüfen kann
+     * @param tag2 true, wenn der Lehrer am 2. Tag prüfen kann
      **/
-    public Lehrer( int uid, String name, boolean montag, boolean dienstag) {
+    public Lehrer( int uid, String name, boolean tag1, boolean tag2) {
         this.uid = uid;
         this.name = name;
-        this.montag = montag;
-        this.dienstag = dienstag;
+        this.tag1 = tag1;
+        this.tag2 = tag2;
     }
     
     /**
@@ -182,16 +182,16 @@ public class Lehrer implements SQLizable {
     
     /**
      * Liefert einen String zurück, der den Lehrer beschreibt.
-     * Dieser String hat die Form "UID Name Montag Dienstag", 
-     * wobei Montag und Dienstag nur jeweils dann eingeblendet 
+     * Dieser String hat die Form "UID Name tag1 tag2", 
+     * wobei tag1 und tag2 nur jeweils dann eingeblendet 
      * werden, wenn der Lehrer an diesem Tag frei ist.
      *
-     * @return String der Form "UID Name Montag Dienstag"
+     * @return String der Form "UID Name tag1 tag2"
      **/
     public String toString() {
         return uid + " " + name +
-               (montag ? " Montag" : "") +
-               (dienstag ? " Dienstag" : "");
+               (tag1 ? " tag1" : "") +
+               (tag2 ? " tag2" : "");
     }
 
     // Ab hier nur mehr getter/setter-Methoden (Beschreibung siehe Variablendeklaration):
@@ -212,20 +212,20 @@ public class Lehrer implements SQLizable {
         this.name = name;
     }
 
-    public boolean isMontag() {
-        return montag;
+    public boolean isTag1() {
+        return tag1;
     }
 
-    public void setMontag(boolean montag) {
-        this.montag = montag;
+    public void setTag1(boolean tag1) {
+        this.tag1 = tag1;
     }
 
-    public boolean isDienstag() {
-        return dienstag;
+    public boolean isTag2() {
+        return tag2;
     }
 
-    public void setDienstag(boolean dienstag) {
-        this.dienstag = dienstag;
+    public void setTag2(boolean tag2) {
+        this.tag2 = tag2;
     }
 
     /**
@@ -246,11 +246,11 @@ public class Lehrer implements SQLizable {
          * (MySQL, PostgreSQL) sollte dies dann je nach 
          * verwendeter Datenbank angepasst werden.
          **/
-        int montag_int = montag ? -1 : 0;
-        int dienstag_int = dienstag ? -1 : 0;
+        int tag1_int = tag1 ? -1 : 0;
+        int tag2_int = tag2 ? -1 : 0;
         
-        return "INSERT INTO " + table + " (Lehrernummer, Kürzel, Montag, Dienstag) " +
-                    "VALUES (" + uid + ", '" + name + "', " + montag_int + ", " + dienstag_int + ")";
+        return "INSERT INTO " + table + " (Lehrernummer, Kürzel, tag1, tag2) " +
+                    "VALUES (" + uid + ", '" + name + "', " + tag1_int + ", " + tag2_int + ")";
     }
     
 }

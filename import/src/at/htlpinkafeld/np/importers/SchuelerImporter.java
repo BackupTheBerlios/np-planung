@@ -32,6 +32,9 @@ import java.io.*;
 import java.util.*;
 import javax.swing.table.*;
 import com.Ostermiller.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 import at.htlpinkafeld.np.model.*;
 import at.htlpinkafeld.np.devel.*;
@@ -57,7 +60,7 @@ public class SchuelerImporter implements Databaseable {
 
     private int KLASSE = 0;
     private int KATALOG = 1;
-    private int VORNAME = 2;
+    private int VORNAME = 2; 
     private int NACHNAME = 3;
     private int NOTE = 4;
     private int GEGENSTAND = 5;
@@ -114,19 +117,22 @@ public class SchuelerImporter implements Databaseable {
     {
         String [] line = null;
         int uid = 1; // Zu vergebende UID
-        
+        int klasse_uid = 1;
+        boolean gefunden = false;
+        Vector<String> gelesene_namen = new Vector<String>();   //alle eingelesenen Namen der 4B-Klassen speichern
+        Vector<Integer> gelesene_klassenid = new Vector<Integer>();     //zur Schüler gehörige Klassen-IDs
         // Gegenstand-Lehrer-Klasse Relationen
         Vector<RelationGegenstandLehrerKlasse> glk_rel = lgi.getRelationen();
         
         Logger.progress( this, "Lese Schüler und Noten aus " + filename);
-        
+
         while( (line = parser.getLine()) != null)
-        {
+        {        
             if( line[NOTE].equals( "5") || line[NOTE].equals( "NB"))
             {
                 int katalognr = 0;
-                String name = line[VORNAME]+ " " + line[NACHNAME];
-                
+                String name = line[NACHNAME]+ " " + line[VORNAME];
+
                 try
                 {
                     katalognr = Integer.parseInt( line[KATALOG]);
@@ -139,11 +145,40 @@ public class SchuelerImporter implements Databaseable {
                     // Wir setzen voraus, dass eine falsche Katalog-Nummer eine falsche Zeile bedeutet
                     continue;
                 }
+
+                String gelesene_klasse = line[KLASSE];
+                if(gelesene_klasse.equals(new String("3B")))
+                {
+                    gefunden = false;
+                    for(int i=0; i<gelesene_namen.size() && gefunden==false; i++)   //prüfen, ob dieser Schüler schon im gelesenen_namen-Vektor steht
+                    {
+                        if(name.equals(gelesene_namen.get(i)))  //wenn ja, Klassen-ID dieses Schüler automatisch zuweisen
+                        {
+                            gefunden = true;
+                            klasse_uid = gelesene_klassenid.get(i);
+                        }
+                    }
+                    if(gefunden == false)   //wenn Schüler noch nicht in Vektor --> Dialog öffnen
+                    {
+                        //erstellt einen Auswahl-Dialog für Schüler, die in die 3BT oder 3BH gehen
+                        //da in der Schuelermitnoten.cvs nur 3B steht, muss hier nachgefragt werden
+                        Object[] options = { "3BT", "3BH" };
+                        int auswahl = JOptionPane.showOptionDialog(null, name, "Auswahl", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                        if(auswahl == 1)    //wenn auswahl == "3BT"
+                            klasse_uid = ki.findKlasse("3BT");
+                        else
+                            klasse_uid = ki.findKlasse("3BH");
+                        gelesene_namen.add(name);
+                        gelesene_klassenid.add(klasse_uid);
+                    }
+                }
+                else
+                {
+                    klasse_uid = ki.findKlasse( line[KLASSE]);  
+                }
                 
-                int klasse_uid = ki.findKlasse( line[KLASSE]);
-                
-                Schueler s = new Schueler( katalognr, name, klasse_uid);
-                
+                Schueler s = new Schueler( katalognr, name, klasse_uid);             
+               // System.out.println("Schueler "+s.getName()+" bekommt ID "+klasse_uid);
                 if( s.isValid())
                 {
                     if( Schueler.schuelerExists( schueler, s))
@@ -361,3 +396,4 @@ public class SchuelerImporter implements Databaseable {
         return "Schülerdaten und Schüler-Gegenstand Relationen";
     }
 }
+

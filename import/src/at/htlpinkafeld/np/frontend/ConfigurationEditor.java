@@ -50,6 +50,21 @@ public class ConfigurationEditor extends javax.swing.JDialog {
         ConfigManager cm = ConfigManager.getInstance();
         
         properties = cm.getPropertyNames();
+
+        if(properties.size()==0)
+        {
+            properties.add("at.htlpinkafeld.np.util.ImportFiles.gpu002");
+            cm.setProperty("at.htlpinkafeld.np.util.ImportFiles.gpu002", "D:\\Schule\\Projekt\\Backups\\03_Implementierung\\Testdaten AKTUELL\\gpu002.txt");
+            properties.add("at.htlpinkafeld.np.util.ImportFiles.gpu005");
+            cm.setProperty("at.htlpinkafeld.np.util.ImportFiles.gpu005", "D:\\Schule\\Projekt\\Backups\\03_Implementierung\\Testdaten AKTUELL\\gpu005.txt");
+            properties.add("at.htlpinkafeld.np.util.ImportFiles.gpu006");
+            cm.setProperty("at.htlpinkafeld.np.util.ImportFiles.gpu006", "D:\\Schule\\Projekt\\Backups\\03_Implementierung\\Testdaten AKTUELL\\gpu006.txt");
+            properties.add("at.htlpinkafeld.np.util.ImportFiles.gpu008");
+            cm.setProperty("at.htlpinkafeld.np.util.ImportFiles.gpu008", "D:\\Schule\\Projekt\\Backups\\03_Implementierung\\Testdaten AKTUELL\\gpu008.txt");
+            properties.add("at.htlpinkafeld.np.util.ImportFiles.sasii-schuelermitnoten");
+            cm.setProperty("at.htlpinkafeld.np.util.ImportFiles.sasii-schuelermitnoten", "D:\\Schule\\Projekt\\Backups\\03_Implementierung\\Testdaten AKTUELL\\SchuelermitNoten.csv");
+        }
+
         sortStringVector( properties);
         
         String oldsection = "";
@@ -58,7 +73,7 @@ public class ConfigurationEditor extends javax.swing.JDialog {
         {
             String name = properties.get(i);
             
-            JConfigTextField tf = new JConfigTextField( name, cm.getProperty( name, null));
+            JConfigTextField tf = new JConfigTextField( name, cm.getProperty( name, null));           
             
             String section = name.substring( 19, name.lastIndexOf( "."));
             
@@ -75,7 +90,7 @@ public class ConfigurationEditor extends javax.swing.JDialog {
             BodyPanel.add( namelbl);
             BodyPanel.add( tf);
             
-            textfields.add( tf);
+            textfields.add( tf);                      
         }
         
         pack();
@@ -83,12 +98,12 @@ public class ConfigurationEditor extends javax.swing.JDialog {
         FrontendUtil.setMaxSize( this, 600, 0);
         FrontendUtil.setMinSize( this, 0, 600);
         
-        FrontendUtil.centerForm( this);
+        FrontendUtil.centerForm( this);       
         
         // Infomeldung ausgeben
         JOptionPane.showMessageDialog( parent,
                 "Möglicherweise werden erst nach einem kompletten Durchlauf\n" + 
-                "alle benötigen Konfigurationseinstelungen sichbar.\n\n");
+                "alle benötigen Konfigurationseinstellungen sichtbar.\n\n");
         
         setVisible( true);
     }
@@ -115,7 +130,7 @@ public class ConfigurationEditor extends javax.swing.JDialog {
                     v.setElementAt( a, i+1);
                     isSorted = false;
                 }
-            }
+            }           
         }
     }
     
@@ -142,7 +157,6 @@ public class ConfigurationEditor extends javax.swing.JDialog {
             { "importers.SchuelerImporter", "Spalten (nullbasiert) für SchulerMitNoten" },
             { "importers.RaumImporter", "Spalten (nullbasiert) für GPU005" }
         };
-         
 
         // Suche nach einer Beschreibung
         for( int i=0; i<descriptions.length; i++)
@@ -194,14 +208,13 @@ public class ConfigurationEditor extends javax.swing.JDialog {
 
         BodyPanel.setLayout(new java.awt.GridLayout(0, 2, 5, 5));
 
-        BodyPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(10, 10, 10, 10)));
+        BodyPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         jScrollPane1.setViewportView(BodyPanel);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         pack();
-    }
-    // </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>//GEN-END:initComponents
 
     private void SpeichernButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SpeichernButtonActionPerformed
         for( int i=0; i<textfields.size(); i++)
@@ -211,6 +224,7 @@ public class ConfigurationEditor extends javax.swing.JDialog {
             // Daten vom TextField in den ConfigManager speichern
             tf.saveTo( ConfigManager.getInstance());
         }
+        dispose();
     }//GEN-LAST:event_SpeichernButtonActionPerformed
 
     private void AbbrechenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbbrechenButtonActionPerformed
