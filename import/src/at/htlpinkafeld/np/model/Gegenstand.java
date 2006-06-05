@@ -39,6 +39,7 @@ import at.htlpinkafeld.np.devel.*;
  * Funktionen, um Gegenstand-Objekte zu bearbeiten.
  *
  * @author Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class Gegenstand implements SQLizable {
     private int uid = 0; // UID des Gegenstands
@@ -94,14 +95,6 @@ public class Gegenstand implements SQLizable {
         this.muendlich = muendlich;
         this.gruppe = gruppe;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName( String name) {
-        this.name = name;
-    }
     
     /**
      * Vergleicht den Gegenstand mit einem anderen und liefert 
@@ -150,6 +143,14 @@ public class Gegenstand implements SQLizable {
      **/
     public boolean isValid() {
         return !name.equals( "");
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name) {
+        this.name = name;
     }
 
     public int getUid() {

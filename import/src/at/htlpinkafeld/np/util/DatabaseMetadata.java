@@ -36,6 +36,7 @@ package at.htlpinkafeld.np.util;
  * nur diese Klasse zu ändern.
  * 
  * @author Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class DatabaseMetadata {
     private static DatabaseMetadata instance = null;

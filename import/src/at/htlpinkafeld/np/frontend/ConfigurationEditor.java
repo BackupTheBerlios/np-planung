@@ -37,6 +37,7 @@ import at.htlpinkafeld.np.frontend.widgets.*;
 /**
  *
  * @author  Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class ConfigurationEditor extends javax.swing.JDialog {
     Vector<String> properties = null;

@@ -39,6 +39,7 @@ import at.htlpinkafeld.np.frontend.*;
  * Zusätzlich gibt es Funktionen, um mit Klassendaten umzugehen.
  *
  * @author Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class Klasse implements SQLizable {
     private int uid = 0; // Die UID der Klasse

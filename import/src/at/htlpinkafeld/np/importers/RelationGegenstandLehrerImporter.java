@@ -47,6 +47,7 @@ import at.htlpinkafeld.np.util.*;
  * sinnvolle Daten beinhalten.
  *
  * @author Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class RelationGegenstandLehrerImporter implements Databaseable {
     private String filename = null;
@@ -60,7 +61,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
     private Vector<RelationLehrerGegenstand> relationen2 = null;        //Relationen, die 1:1 aus gpu008 stammen
     
     private boolean hasRead = false; // Wurde die read-Funktion bereits aufgerufen?
-    private boolean hasImported = false; // Wurde die for-Schleife bereits aufgerufen?
+    private boolean hasImported = false; // Wurde die for-Schleife im readLehrerGegenstaende() bereits durchlaufen?
     
     private int KLASSE = 4;
     private int LEHRER = 5;
@@ -273,8 +274,7 @@ public class RelationGegenstandLehrerImporter implements Databaseable {
     public Vector<RelationGegenstandLehrerKlasse> getRelationen()
     {
         return relationen;
-    }
-    
+    }    
     
     /**
      * Liefert die Lehrertabelle zurück, die zuvor eingelesen werden muss.

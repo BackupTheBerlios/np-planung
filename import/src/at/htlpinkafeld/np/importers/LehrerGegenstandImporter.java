@@ -45,6 +45,7 @@ import at.htlpinkafeld.np.util.*;
  * bzw Gegenstand zu verwenden sind.
  *
  * @author Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class LehrerGegenstandImporter {
     private String filename = null;
@@ -156,7 +157,7 @@ public class LehrerGegenstandImporter {
     /**
      * Liefert die Lehrertabelle zurück, die zuvor eingelesen werden muss.
      *
-     * @return Vektor, der alle Lehrer enthält (gleiche Reihenfolge wie in gpu008)
+     * @return Vektor, der alle Lehrer enthält (gleiche Anzahl und Reihenfolge wie in gpu008)
      **/
     public Vector<Lehrer> getLehrer()
     {
@@ -166,7 +167,7 @@ public class LehrerGegenstandImporter {
     /**
      * Liefert die Gegenstandstabelle zurück, die zuvor eingelesen werden muss.
      *
-     * @return Vektor, der alle Gegenstände enthält (gleiche Reihenfolge wie in gpu008)
+     * @return Vektor, der alle Gegenstände enthält (gleiche Anzahl und Reihenfolge wie in gpu008)
      **/
     public Vector<Gegenstand> getGegenstand()
     {

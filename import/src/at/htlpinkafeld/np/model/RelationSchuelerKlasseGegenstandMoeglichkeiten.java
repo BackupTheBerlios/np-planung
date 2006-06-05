@@ -93,8 +93,6 @@ public class RelationSchuelerKlasseGegenstandMoeglichkeiten {
 
     public void setMoeglichkeiten(Vector<RelationGegenstandLehrerKlasse> moeglichkeiten) {
         this.moeglichkeiten = moeglichkeiten;
-    }
-    
-    
+    }    
     
 }

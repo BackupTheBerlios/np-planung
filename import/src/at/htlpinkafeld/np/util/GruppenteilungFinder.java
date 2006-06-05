@@ -28,8 +28,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package at.htlpinkafeld.np.util;
 
+import at.htlpinkafeld.np.frontend.MainDialog;
 import java.util.*;
 import java.io.*;
+import javax.swing.*;
 
 import at.htlpinkafeld.np.model.*;
 import at.htlpinkafeld.np.devel.*;
@@ -139,9 +141,35 @@ public class GruppenteilungFinder {
      * erstellt wird.
      *
      * @return Dateiname der Output-Datei für Gruppenteilung-Formulare
-     **/
+     **/ 
     public String getGruppenHtmlFilename() {
-        return ConfigManager.getInstance().getProperty( this, "html-file", "c:\\Gruppenteilung-Formulare.html");
+        //Speichern-Dialog
+        JFileChooser chooser = new JFileChooser("c:/");
+        String extension = new String("html"); //Erweiterung für Dateinamen
+        chooser.setDialogType( JFileChooser.SAVE_DIALOG);
+        chooser.setDialogTitle( "Gruppenteilung-Formulare speichern");
+        
+        //Filter für Konfigurationsdatei wird erzeugt
+        MyFileFilter filter = new MyFileFilter();
+        filter.addExtension(extension);
+        filter.setDescription("HTML-Datei");
+        chooser.setFileFilter(filter);
+        
+        String filename = new String();
+        
+        if( chooser.showSaveDialog( MainDialog.getInstance()) == JFileChooser.APPROVE_OPTION)
+        {
+            filename = chooser.getSelectedFile().getAbsolutePath();
+            if(filename.contains("."+extension))    //wenn die Erweiterung bereits vorhanden ist
+            {
+                extension = new String("");     //keine Erweiterung anhängen (ansonsten gibt es eine doppelte Erweiterung, z.B.: .txt.txt)
+            } 
+            else 
+            {
+                extension = new String("."+extension);     //Erweiterung wird angehängt
+            }              
+        }        
+        return ConfigManager.getInstance().getProperty( this, "html-file", filename+extension);  
     }
     
     /**
@@ -174,7 +202,7 @@ public class GruppenteilungFinder {
         /**
          * Hier folgt unser "schöner" Dokumenten-Header
          **/
-        out.println( "<div align=\"center\" style=\"font-size: 48pt;\"><br><br><br><br><br>Nachprüfungsplanung<br>Formulare<br><font style=\"font-size: 16pt;\">Copyright &copy; 2005 Nachprüfungsplanungsteam</font></div>");
+        out.println( "<br><br><div align=\"center\" style=\"font-size: 48pt;\">Nachprüfungsplanung<br>Formulare<br><font style=\"font-size: 16pt;\">Copyright &copy; 2006 Nachprüfungsplanungsteam</font></div>");
         
         // Abteilungswechsel-Check-Variablen
         boolean isNewAbteilung = false;
@@ -197,7 +225,7 @@ public class GruppenteilungFinder {
             
             if( isNewAbteilung)
             {
-                out.println( "<div style=\"page-break-before: always;\">");
+                out.println( "<div style=\"page-break-before: always;\"><br><br>");
                 out.println( "<h1>Abteilung " + oldAbteilung + "</h1>");
             }
             

@@ -39,6 +39,7 @@ import at.htlpinkafeld.np.util.*;
  * Zeit für eine Prüfung hat.
  *
  * @author Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class Lehrer implements SQLizable {
     private int uid = 0; // UID des Lehrers

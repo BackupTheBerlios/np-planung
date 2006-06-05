@@ -43,6 +43,7 @@ import at.htlpinkafeld.np.util.*;
  * Dies ist der Hauptdialog des Einlesen-Programms.
  *
  * @author  Thomas Perl <thp@perli.net>
+ * @author edited by Marc Schermann
  */
 public class MainDialog extends javax.swing.JFrame implements Runnable {
     // Instance für Singleton Ding
@@ -524,7 +525,7 @@ public class MainDialog extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void MenuKonfiguationSpeichernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuKonfiguationSpeichernActionPerformed
-        String extension=new String("conf"); //Erweiterung für Dateinamen
+        String extension = new String("conf"); //Erweiterung für Dateinamen
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogType( JFileChooser.SAVE_DIALOG);
         chooser.setDialogTitle( "Konfigurationsdatei speichern");
